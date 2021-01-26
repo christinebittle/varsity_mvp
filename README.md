@@ -14,4 +14,4 @@ After logging in, in local storage, you can see token cookies. These are later u
 Detailed look at the cookies in developer tools.
 
 ![Curl Cookies](https://github.com/christinebittle/varsity_w_auth/blob/master/varsity_w_auth/assets/curl_cookie.png)
-An example of using the cookie as part of a curl request. Notice how the initial request fails, but the second request (with cookie data token) allows us to access the data.
+An example of using the cookie as part of a curl request. Notice how the initial request fails, but the second request (with cookie data token) allows us to access the data. This cookie should only work for the domain I'm using it on (localhost), otherwise the app is vulnerable to (Session hijacking attacks)[https://en.wikipedia.org/wiki/Session_hijacking].
