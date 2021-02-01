@@ -1,0 +1,42 @@
+﻿@model varsity_w_auth.Models.PlayerDto
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h4>Player</h4>
+
+<div>
+    <div>@Html.ActionLink("Delete", "DeleteConfirm", new { id = Model.PlayerID })</div>    
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerFirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PlayerFirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerLastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PlayerLastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PlayerBio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PlayerBio)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PlayerID }) |
+    @Html.ActionLink("Back to List", "List")
+</p>

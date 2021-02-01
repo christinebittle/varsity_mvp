@@ -13,11 +13,20 @@ namespace varsity_w_auth.Models
         public int SponsorID { get; set; }
 
         public string SponsorName { get; set; }
+        public string SponsorURL { get; set; }
 
 
         //Utilizes the inverse property to specify the "Many"
         //https://www.entityframeworktutorial.net/code-first/inverseproperty-dataannotations-attribute-in-code-first.aspx
         //One Sponsor Many Teams
         public ICollection<Team> Teams { get; set; }
+    }
+
+    public class SponsorDTO
+    {
+        public int SponsorID { get; set; }
+
+        public string SponsorName { get; set; }
+        public string SponsorURL { get; set; }
     }
 }

@@ -27,11 +27,8 @@ namespace varsity_w_auth.Controllers
 
         // GET: api/PlayerData/GetPlayers
         // TODO: Searching Logic?
-
-        //Authorize annotation will block requests unless user is authorized
-        //authorization process checks for valid cookies in request
-        [Authorize]
-        public IEnumerable<PlayerDto> GetPlayers()
+        [ResponseType(typeof(IEnumerable<PlayerDto>))]
+        public IHttpActionResult GetPlayers()
         {
             List<Player> Players = db.Players.ToList();
             List<PlayerDto> PlayerDtos = new List<PlayerDto> { };
@@ -43,17 +40,19 @@ namespace varsity_w_auth.Controllers
                 {
                     PlayerID = Player.PlayerID,
                     PlayerBio = Player.PlayerBio,
-                    PlayerName = Player.PlayerName
+                    PlayerFirstName = Player.PlayerFirstName,
+                    PlayerLastName = Player.PlayerLastName,
+                    TeamID = Player.TeamID
                 };
                 PlayerDtos.Add(NewPlayer);
             }
 
-            return PlayerDtos;
+            return Ok(PlayerDtos);
         }
 
         // GET: api/PlayerData/FindPlayer/5
-        [ResponseType(typeof(PlayerDto))]
         [HttpGet]
+        [ResponseType(typeof(PlayerDto))]
         public IHttpActionResult FindPlayer(int id)
         {
             //Find the data
@@ -69,7 +68,9 @@ namespace varsity_w_auth.Controllers
             {
                 PlayerID = Player.PlayerID,
                 PlayerBio = Player.PlayerBio,
-                PlayerName = Player.PlayerName
+                PlayerFirstName = Player.PlayerFirstName,
+                PlayerLastName = Player.PlayerLastName,
+                TeamID = Player.TeamID
             };
 
 
@@ -129,7 +130,7 @@ namespace varsity_w_auth.Controllers
             db.Players.Add(player);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = player.PlayerID }, player);
+            return Ok(player.PlayerID);
         }
 
         // POST: api/Players/DeletePlayer/5

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,7 +15,9 @@ namespace varsity_w_auth.Models
         [Key]
         public int PlayerID { get; set; }
 
-        public string PlayerName { get; set; }
+        public string PlayerFirstName { get; set; }
+
+        public string PlayerLastName { get; set; }
 
         public string PlayerBio { get; set; }
 
@@ -35,9 +38,13 @@ namespace varsity_w_auth.Models
     public class PlayerDto
     {
         public int PlayerID { get; set; }
-        public string PlayerName { get; set; }
+        [DisplayName("First Name")]
+        public string PlayerFirstName { get; set; }
+        [DisplayName("Last Name")]
+        public string PlayerLastName { get; set; }
+        [DisplayName("Player Bio")]
         public string PlayerBio { get; set; }
 
-
+        public int TeamID { get; set; }
     }
 }

@@ -21,4 +21,13 @@ namespace varsity_w_auth.Models
         //A team can have many sponsors
         public ICollection<Sponsor> Sponsors { get; set; }
     }
+
+    public class TeamDTO
+    {
+        public int TeamID { get; set; }
+
+        public string TeamName { get; set; }
+
+        public string TeamBio { get; set; }
+    }
 }
