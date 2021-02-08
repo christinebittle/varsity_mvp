@@ -1,0 +1,38 @@
+﻿@model varsity_w_auth.Models.TeamDto
+
+@{
+    ViewBag.Title = "View";
+}
+
+<h2>View</h2>
+
+<h3>Are you sure you want to delete this team?</h3>
+<div>
+    
+    <dl class="dl-horizontal">
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.TeamName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TeamName)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.TeamBio)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TeamBio)
+        </dd>
+        
+    </dl>
+
+    @using (Html.BeginForm("Delete", "Team", new { id=Model.TeamID})) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "List")
+        </div>
+    }
+</div>

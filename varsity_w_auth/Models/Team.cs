@@ -22,7 +22,7 @@ namespace varsity_w_auth.Models
         public ICollection<Sponsor> Sponsors { get; set; }
     }
 
-    public class TeamDTO
+    public class TeamDto
     {
         public int TeamID { get; set; }
 

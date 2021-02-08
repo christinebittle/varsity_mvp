@@ -9,19 +9,18 @@ using System.Net.Http.Headers;
 using System.Diagnostics;
 using System.Web.Script.Serialization;
 
-
 namespace varsity_w_auth.Controllers
 {
-    public class PlayerController : Controller
+    public class SponsorController : Controller
     {
         //Http Client is the proper way to connect to a webapi
         //https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-5.0
 
         private JavaScriptSerializer jss = new JavaScriptSerializer();
         private static readonly HttpClient client;
-        
 
-        static PlayerController()
+
+        static SponsorController()
         {
             HttpClientHandler handler = new HttpClientHandler()
             {
@@ -33,22 +32,22 @@ namespace varsity_w_auth.Controllers
             client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/json"));
 
-            
+
             //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ACCESS_TOKEN);
 
         }
 
 
 
-        // GET: Player/List
+        // GET: Sponsor/List
         public ActionResult List()
         {
-            string url = "playerdata/getplayers";
+            string url = "sponsordata/getsponsors";
             HttpResponseMessage response = client.GetAsync(url).Result;
             if (response.IsSuccessStatusCode)
             {
-                IEnumerable<PlayerDto> SelectedPlayers = response.Content.ReadAsAsync<IEnumerable<PlayerDto>>().Result;
-                return View(SelectedPlayers);
+                IEnumerable<SponsorDto> SelectedSponsors = response.Content.ReadAsAsync<IEnumerable<SponsorDto>>().Result;
+                return View(SelectedSponsors);
             }
             else
             {
@@ -56,18 +55,18 @@ namespace varsity_w_auth.Controllers
             }
         }
 
-        // GET: Player/Details/5
+        // GET: Sponsor/Details/5
         public ActionResult Details(int id)
         {
-            string url = "playerdata/findplayer/" + id;
+            string url = "sponsordata/findsponsor/" + id;
             HttpResponseMessage response = client.GetAsync(url).Result;
             //Can catch the status code (200 OK, 301 REDIRECT), etc.
             //Debug.WriteLine(response.StatusCode);
             if (response.IsSuccessStatusCode)
             {
-                //Put data into player data transfer object
-                PlayerDto SelectedPlayer = response.Content.ReadAsAsync<PlayerDto>().Result;
-                return View(SelectedPlayer);
+                //Put data into Sponsor data transfer object
+                SponsorDto SelectedSponsor = response.Content.ReadAsAsync<SponsorDto>().Result;
+                return View(SelectedSponsor);
             }
             else
             {
@@ -75,50 +74,50 @@ namespace varsity_w_auth.Controllers
             }
         }
 
-        // GET: Player/Create
+        // GET: Sponsor/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Player/Create
+        // POST: Sponsor/Create
         [HttpPost]
         [ValidateAntiForgeryToken()]
-        public ActionResult Create(Player PlayerInfo)
+        public ActionResult Create(Sponsor SponsorInfo)
         {
-            Debug.WriteLine(PlayerInfo.PlayerFirstName);
-            string url = "playerdata/addplayer";
-            Debug.WriteLine(jss.Serialize(PlayerInfo));
-            HttpContent content = new StringContent(jss.Serialize(PlayerInfo));
+            Debug.WriteLine(SponsorInfo.SponsorName);
+            string url = "sponsordata/addsponsor";
+            Debug.WriteLine(jss.Serialize(SponsorInfo));
+            HttpContent content = new StringContent(jss.Serialize(SponsorInfo));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            HttpResponseMessage response = client.PostAsync(url,content).Result;
+            HttpResponseMessage response = client.PostAsync(url, content).Result;
 
             if (response.IsSuccessStatusCode)
             {
-                
-                int playerid = response.Content.ReadAsAsync<int>().Result;
-                return RedirectToAction("Details", new { id=playerid });
+
+                int Sponsorid = response.Content.ReadAsAsync<int>().Result;
+                return RedirectToAction("Details", new { id = Sponsorid });
             }
             else
             {
                 return RedirectToAction("Error");
             }
-            
-            
+
+
         }
 
-        // GET: Player/Edit/5
+        // GET: Sponsor/Edit/5
         public ActionResult Edit(int id)
         {
-            string url = "playerdata/findplayer/" + id;
+            string url = "Sponsordata/findsponsor/" + id;
             HttpResponseMessage response = client.GetAsync(url).Result;
             //Can catch the status code (200 OK, 301 REDIRECT), etc.
             //Debug.WriteLine(response.StatusCode);
             if (response.IsSuccessStatusCode)
             {
-                //Put data into player data transfer object
-                PlayerDto SelectedPlayer = response.Content.ReadAsAsync<PlayerDto>().Result;
-                return View(SelectedPlayer);
+                //Put data into Sponsor data transfer object
+                SponsorDto SelectedSponsor = response.Content.ReadAsAsync<SponsorDto>().Result;
+                return View(SelectedSponsor);
             }
             else
             {
@@ -126,21 +125,20 @@ namespace varsity_w_auth.Controllers
             }
         }
 
-        // POST: Player/Edit/5
+        // POST: Sponsor/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken()]
-        public ActionResult Edit(int id, Player PlayerInfo)
+        public ActionResult Edit(int id, Sponsor SponsorInfo)
         {
-            Debug.WriteLine(PlayerInfo.PlayerFirstName);
-            string url = "playerdata/updateplayer/"+id;
-            Debug.WriteLine(jss.Serialize(PlayerInfo));
-            HttpContent content = new StringContent(jss.Serialize(PlayerInfo));
+            Debug.WriteLine(SponsorInfo.SponsorName);
+            string url = "sponsordata/updatesponsor/" + id;
+            Debug.WriteLine(jss.Serialize(SponsorInfo));
+            HttpContent content = new StringContent(jss.Serialize(SponsorInfo));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             HttpResponseMessage response = client.PostAsync(url, content).Result;
-            Debug.WriteLine(response.StatusCode);
+
             if (response.IsSuccessStatusCode)
             {
-                
                 return RedirectToAction("Details", new { id = id });
             }
             else
@@ -149,19 +147,19 @@ namespace varsity_w_auth.Controllers
             }
         }
 
-        // GET: Player/Delete/5
+        // GET: Sponsor/Delete/5
         [HttpGet]
         public ActionResult DeleteConfirm(int id)
         {
-            string url = "playerdata/findplayer/" + id;
+            string url = "sponsordata/findsponsor/" + id;
             HttpResponseMessage response = client.GetAsync(url).Result;
             //Can catch the status code (200 OK, 301 REDIRECT), etc.
             //Debug.WriteLine(response.StatusCode);
             if (response.IsSuccessStatusCode)
             {
-                //Put data into player data transfer object
-                PlayerDto SelectedPlayer = response.Content.ReadAsAsync<PlayerDto>().Result;
-                return View(SelectedPlayer);
+                //Put data into Sponsor data transfer object
+                SponsorDto SelectedSponsor = response.Content.ReadAsAsync<SponsorDto>().Result;
+                return View(SelectedSponsor);
             }
             else
             {
@@ -169,20 +167,20 @@ namespace varsity_w_auth.Controllers
             }
         }
 
-        // POST: Player/Delete/5
+        // POST: Sponsor/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken()]
         public ActionResult Delete(int id)
         {
-            string url = "playerdata/deleteplayer/" + id;
+            string url = "sponsordata/deletesponsor/" + id;
             //post body is empty
             HttpContent content = new StringContent("");
-            HttpResponseMessage response = client.PostAsync(url,content).Result;
+            HttpResponseMessage response = client.PostAsync(url, content).Result;
             //Can catch the status code (200 OK, 301 REDIRECT), etc.
             //Debug.WriteLine(response.StatusCode);
             if (response.IsSuccessStatusCode)
             {
-                
+
                 return RedirectToAction("List");
             }
             else

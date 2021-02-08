@@ -185,6 +185,10 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PlayerController.cs" />
     <Compile Include="Controllers\PlayerDataController.cs" />
+    <Compile Include="Controllers\SponsorController.cs" />
+    <Compile Include="Controllers\SponsorDataController.cs" />
+    <Compile Include="Controllers\TeamController.cs" />
+    <Compile Include="Controllers\TeamDataController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -273,6 +277,18 @@
     <Content Include="Views\Player\Edit.cshtml" />
     <Content Include="Views\Player\DeleteConfirm.cshtml" />
     <Content Include="Views\Player\Error.cshtml" />
+    <Content Include="Views\Team\Create.cshtml" />
+    <Content Include="Views\Team\DeleteConfirm.cshtml" />
+    <Content Include="Views\Team\Details.cshtml" />
+    <Content Include="Views\Team\Edit.cshtml" />
+    <Content Include="Views\Team\Error.cshtml" />
+    <Content Include="Views\Team\List.cshtml" />
+    <Content Include="Views\Sponsor\Create.cshtml" />
+    <Content Include="Views\Sponsor\DeleteConfirm.cshtml" />
+    <Content Include="Views\Sponsor\Details.cshtml" />
+    <Content Include="Views\Sponsor\Edit.cshtml" />
+    <Content Include="Views\Sponsor\Error.cshtml" />
+    <Content Include="Views\Sponsor\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

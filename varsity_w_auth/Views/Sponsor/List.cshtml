@@ -1,0 +1,41 @@
+﻿@model IEnumerable<varsity_w_auth.Models.SponsorDto>
+
+@{
+    ViewBag.Title = "View";
+}
+
+<h2>View</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.SponsorName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SponsorURL)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.SponsorName)
+        </td>
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.SponsorURL)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.SponsorID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.SponsorID })
+            
+        </td>
+    </tr>
+}
+
+</table>

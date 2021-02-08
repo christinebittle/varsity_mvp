@@ -25,8 +25,14 @@ namespace varsity_w_auth.Controllers
         //Note: The base scaffolded code needs many improvements for a fully
         //functioning MVP.
 
-        // GET: api/PlayerData/GetPlayers
-        // TODO: Searching Logic?
+
+        /// <summary>
+        /// Gets a list or players in the database alongside a status code (200 OK).
+        /// </summary>
+        /// <returns>A list of players including their ID, bio, first name, last name, and teamid.</returns>
+        /// <example>
+        /// GET: api/PlayerData/GetPlayers
+        /// </example>
         [ResponseType(typeof(IEnumerable<PlayerDto>))]
         public IHttpActionResult GetPlayers()
         {
@@ -50,7 +56,14 @@ namespace varsity_w_auth.Controllers
             return Ok(PlayerDtos);
         }
 
+        /// <summary>
+        /// Finds a particular player in the database with a 200 status code. If the player is not found, return 404.
+        /// </summary>
+        /// <param name="id">The player id</param>
+        /// <returns>Information about the player, including player id, bio, first and last name, and teamid</returns>
+        // <example>
         // GET: api/PlayerData/FindPlayer/5
+        // </example>
         [HttpGet]
         [ResponseType(typeof(PlayerDto))]
         public IHttpActionResult FindPlayer(int id)
@@ -78,8 +91,16 @@ namespace varsity_w_auth.Controllers
             return Ok(PlayerDto);
         }
 
-        // POST: api/PlayerData/UpdatePlayer/5
-        // FORM DATA: Player JSON Object
+        /// <summary>
+        /// Updates a player in the database given information about the player.
+        /// </summary>
+        /// <param name="id">The player id</param>
+        /// <param name="player">A player object. Received as POST data.</param>
+        /// <returns></returns>
+        /// <example>
+        /// POST: api/PlayerData/UpdatePlayer/5
+        /// FORM DATA: Player JSON Object
+        /// </example>
         [ResponseType(typeof(void))]
         [HttpPost]
         public IHttpActionResult UpdatePlayer(int id, [FromBody] Player player)
@@ -99,6 +120,7 @@ namespace varsity_w_auth.Controllers
             try
             {
                 db.SaveChanges();
+                
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -115,8 +137,16 @@ namespace varsity_w_auth.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Players/AddPlayer
-        // FORM DATA: Player JSON Object
+
+        /// <summary>
+        /// Adds a player to the database.
+        /// </summary>
+        /// <param name="player">A player object. Sent as POST form data.</param>
+        /// <returns>status code 200 if successful. 400 if unsuccessful</returns>
+        /// <example>
+        /// POST: api/PlayerData/AddPlayer
+        ///  FORM DATA: Player JSON Object
+        /// </example>
         [ResponseType(typeof(Player))]
         [HttpPost]
         public IHttpActionResult AddPlayer([FromBody] Player player)
@@ -133,7 +163,14 @@ namespace varsity_w_auth.Controllers
             return Ok(player.PlayerID);
         }
 
-        // POST: api/Players/DeletePlayer/5
+        /// <summary>
+        /// Deletes a player in the database
+        /// </summary>
+        /// <param name="id">The id of the player to delete.</param>
+        /// <returns>200 if successful. 404 if not successful.</returns>
+        /// <example>
+        /// POST: api/PlayerData/DeletePlayer/5
+        /// </example>
         [HttpPost]
         public IHttpActionResult DeletePlayer(int id)
         {
@@ -158,6 +195,11 @@ namespace varsity_w_auth.Controllers
             base.Dispose(disposing);
         }
 
+        /// <summary>
+        /// Finds a player in the system. Internal use only.
+        /// </summary>
+        /// <param name="id">The player id</param>
+        /// <returns>TRUE if the player exists, false otherwise.</returns>
         private bool PlayerExists(int id)
         {
             return db.Players.Count(e => e.PlayerID == id) > 0;
