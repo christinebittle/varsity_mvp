@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using varsity_w_auth.Models;
+using varsity_w_auth.Models.ViewModels;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Diagnostics;
@@ -58,7 +59,8 @@ namespace varsity_w_auth.Controllers
         // GET: Team/Details/5
         public ActionResult Details(int id)
         {
-            string url = "Teamdata/findTeam/" + id;
+            ShowTeam ViewModel = new ShowTeam();
+            string url = "teamdata/findteam/" + id;
             HttpResponseMessage response = client.GetAsync(url).Result;
             //Can catch the status code (200 OK, 301 REDIRECT), etc.
             //Debug.WriteLine(response.StatusCode);
@@ -66,12 +68,44 @@ namespace varsity_w_auth.Controllers
             {
                 //Put data into Team data transfer object
                 TeamDto SelectedTeam = response.Content.ReadAsAsync<TeamDto>().Result;
-                return View(SelectedTeam);
+                ViewModel.team = SelectedTeam;
             }
             else
             {
                 return RedirectToAction("Error");
             }
+
+            url = "teamdata/getplayersforteam/" + id;
+            response = client.GetAsync(url).Result;
+            //Can catch the status code (200 OK, 301 REDIRECT), etc.
+            //Debug.WriteLine(response.StatusCode);
+            if (response.IsSuccessStatusCode)
+            {
+                //Put data into Team data transfer object
+                IEnumerable<PlayerDto> SelectedPlayers = response.Content.ReadAsAsync<IEnumerable<PlayerDto>>().Result;
+                ViewModel.teamplayers = SelectedPlayers;
+            }
+            else
+            {
+                return RedirectToAction("Error");
+            }
+
+            url = "teamdata/getsponsorsforteam/" + id;
+            response = client.GetAsync(url).Result;
+            //Can catch the status code (200 OK, 301 REDIRECT), etc.
+            //Debug.WriteLine(response.StatusCode);
+            if (response.IsSuccessStatusCode)
+            {
+                //Put data into Team data transfer object
+                IEnumerable<SponsorDto> SelectedSponsors = response.Content.ReadAsAsync<IEnumerable<SponsorDto>>().Result;
+                ViewModel.teamsponsors = SelectedSponsors;
+            }
+            else
+            {
+                return RedirectToAction("Error");
+            }
+
+            return View(ViewModel);
         }
 
         // GET: Team/Create

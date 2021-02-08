@@ -1,34 +1,71 @@
-﻿@model varsity_w_auth.Models.TeamDto
+﻿@model varsity_w_auth.Models.ViewModels.ShowTeam
 
 @{
     ViewBag.Title = "Details";
 }
 
-<h4>Team</h4>
+<h4>Team @Model.team.TeamName</h4>
+<div style="overflow:hidden;">
+    <div style="float:left; marign-right:2%; width:49%;">
+      
+        <div>@Html.ActionLink("Delete", "DeleteConfirm", new { id = Model.team.TeamID })</div>
 
-<div>
-    <div>@Html.ActionLink("Delete", "DeleteConfirm", new { id = Model.TeamID })</div>    
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.TeamName)
-        </dt>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.team.TeamName)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.TeamName)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.team.TeamName)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TeamBio)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.team.TeamBio)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.TeamBio)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.team.TeamBio)
+            </dd>
 
-    </dl>
+        </dl>
+    </div>
+    <div style="float:left;margin-right:0%; width:49%;">
+        <div>
+            <h4>Players:</h4>
+            <div>
+                @foreach (var player in Model.teamplayers)
+                {
+                    <div>
+                        @Html.ActionLink(
+                        player.PlayerFirstName + " " + player.PlayerLastName,
+                        "Details",
+                        "Player",
+                        new { id = player.PlayerID },
+                        new { })
+                    </div>
+                }
+            </div>
+        </div>
+        <div>
+            <h4>Sponsors:</h4>
+            <div>
+                @foreach (var sponsor in Model.teamsponsors)
+                {
+                    <div>
+                        @Html.ActionLink(
+                        sponsor.SponsorName,
+                        "Details",
+                        "Sponsor",
+                        new { id = sponsor.SponsorID },
+                        new { })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.TeamID }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.team.TeamID }) |
     @Html.ActionLink("Back to List", "List")
 </p>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using varsity_w_auth.Models;
+using varsity_w_auth.Models.ViewModels;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Diagnostics;
@@ -58,6 +59,8 @@ namespace varsity_w_auth.Controllers
         // GET: Sponsor/Details/5
         public ActionResult Details(int id)
         {
+            UpdateSponsor ViewModel = new UpdateSponsor();
+
             string url = "sponsordata/findsponsor/" + id;
             HttpResponseMessage response = client.GetAsync(url).Result;
             //Can catch the status code (200 OK, 301 REDIRECT), etc.
@@ -66,12 +69,30 @@ namespace varsity_w_auth.Controllers
             {
                 //Put data into Sponsor data transfer object
                 SponsorDto SelectedSponsor = response.Content.ReadAsAsync<SponsorDto>().Result;
-                return View(SelectedSponsor);
+                ViewModel.sponsor = SelectedSponsor;
             }
             else
             {
                 return RedirectToAction("Error");
             }
+
+            url = "sponsordata/getteamsforsponsor/" + id;
+            response = client.GetAsync(url).Result;
+            //Can catch the status code (200 OK, 301 REDIRECT), etc.
+            //Debug.WriteLine(response.StatusCode);
+            if (response.IsSuccessStatusCode)
+            {
+                //Put data into Sponsor data transfer object
+                IEnumerable<TeamDto> SelectedTeams = response.Content.ReadAsAsync<IEnumerable<TeamDto>>().Result;
+                ViewModel.sponsoredteams = SelectedTeams;
+            }
+            else
+            {
+                return RedirectToAction("Error");
+            }
+
+            return View(ViewModel);
+
         }
 
         // GET: Sponsor/Create

@@ -54,6 +54,70 @@ namespace varsity_w_auth.Controllers
             return Ok(TeamDtos);
         }
 
+
+        /// <summary>
+        /// Gets a list of players in the database alongside a status code (200 OK).
+        /// </summary>
+        /// <param name="id">The input teamid</param>
+        /// <returns>A list of players associated with the team</returns>
+        /// <example>
+        /// GET: api/TeamData/GetTeams
+        /// </example>
+        [ResponseType(typeof(IEnumerable<PlayerDto>))]
+        public IHttpActionResult GetPlayersForTeam(int id)
+        {
+            List<Player> Players = db.Players.Where(p => p.TeamID==id)
+                .ToList();
+            List<PlayerDto> PlayerDtos = new List<PlayerDto> { };
+
+            //Here you can choose which information is exposed to the API
+            foreach (var Player in Players)
+            {
+                PlayerDto NewPlayer = new PlayerDto
+                {
+                    PlayerID = Player.PlayerID,
+                    PlayerBio = Player.PlayerBio,
+                    PlayerFirstName = Player.PlayerFirstName,
+                    PlayerLastName = Player.PlayerLastName,
+                    TeamID = Player.TeamID
+                };
+                PlayerDtos.Add(NewPlayer);
+            }
+
+            return Ok(PlayerDtos);
+        }
+
+        /// <summary>
+        /// Gets a list or Sponsors in the database alongside a status code (200 OK).
+        /// </summary>
+        /// <param name="id">The input teamid</param>
+        /// <returns>A list of Sponsors including their ID, name, and URL.</returns>
+        /// <example>
+        /// GET: api/SponsorData/GetSponsors
+        /// </example>
+        [ResponseType(typeof(IEnumerable<SponsorDto>))]
+        public IHttpActionResult GetSponsorsForTeam(int id)
+        {
+            List<Sponsor> Sponsors = db.Sponsors
+                .Where(s => s.Teams.Any(t => t.TeamID == id))
+                .ToList();
+            List<SponsorDto> SponsorDtos = new List<SponsorDto> { };
+
+            //Here you can choose which information is exposed to the API
+            foreach (var Sponsor in Sponsors)
+            {
+                SponsorDto NewSponsor = new SponsorDto
+                {
+                    SponsorID = Sponsor.SponsorID,
+                    SponsorName = Sponsor.SponsorName,
+                    SponsorURL = Sponsor.SponsorURL
+                };
+                SponsorDtos.Add(NewSponsor);
+            }
+
+            return Ok(SponsorDtos);
+        }
+
         /// <summary>
         /// Finds a particular Team in the database with a 200 status code. If the Team is not found, return 404.
         /// </summary>

@@ -55,6 +55,37 @@ namespace varsity_w_auth.Controllers
         }
 
         /// <summary>
+        /// Gets a list or Teams in the database alongside a status code (200 OK).
+        /// </summary>
+        /// <param name="id">The input sponsor id</param>
+        /// <returns>A list of Teams including their ID, name, and URL.</returns>
+        /// <example>
+        /// GET: api/TeamData/GetTeams
+        /// </example>
+        [ResponseType(typeof(IEnumerable<TeamDto>))]
+        public IHttpActionResult GetTeamsForSponsor(int id)
+        {
+            List<Team> Teams = db.Teams
+                .Where(t => t.Sponsors.Any(s => s.SponsorID == id))
+                .ToList();
+            List<TeamDto> TeamDtos = new List<TeamDto> { };
+
+            //Here you can choose which information is exposed to the API
+            foreach (var Team in Teams)
+            {
+                TeamDto NewTeam = new TeamDto
+                {
+                    TeamID = Team.TeamID,
+                    TeamName = Team.TeamName,
+                    TeamBio = Team.TeamBio
+                };
+                TeamDtos.Add(NewTeam);
+            }
+
+            return Ok(TeamDtos);
+        }
+
+        /// <summary>
         /// Finds a particular Sponsor in the database with a 200 status code. If the Sponsor is not found, return 404.
         /// </summary>
         /// <param name="id">The Sponsor id</param>

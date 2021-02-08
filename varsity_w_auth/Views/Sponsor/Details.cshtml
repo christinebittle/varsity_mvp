@@ -1,34 +1,53 @@
-﻿@model varsity_w_auth.Models.SponsorDto
+﻿@model varsity_w_auth.Models.ViewModels.UpdateSponsor
 
 @{
     ViewBag.Title = "Details";
 }
 
-<h4>Team</h4>
+<h4>Sponsor @Model.sponsor.SponsorName</h4>
 
 <div>
-    <div>@Html.ActionLink("Delete", "DeleteConfirm", new { id = Model.SponsorID })</div>    
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.SponsorName)
-        </dt>
+    <div>@Html.ActionLink("Delete", "DeleteConfirm", new { id = Model.sponsor.SponsorID })</div>    
+    <div style="overflow:hidden;">
+        <div style="float:left; marign-right:2%; width:49%;">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.sponsor.SponsorName)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.SponsorName)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.sponsor.SponsorName)
+                </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.SponsorURL)
-        </dt>
+                <dt>
+                    @Html.DisplayNameFor(model => model.sponsor.SponsorURL)
+                </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.SponsorURL)
-        </dd>
+                <dd>
+                    @Html.DisplayFor(model => model.sponsor.SponsorURL)
+                </dd>
 
-    </dl>
+            </dl>
+        </div>
+        <div style="float:left; marign-right:0%; width:49%;">
+            <h4>Teams Sponsored:</h4>
+            <div>
+                @foreach (var team in Model.sponsoredteams)
+                {
+                    <div>
+                        @Html.ActionLink(
+                        team.TeamName,
+                        "Details",
+                        "Team",
+                        new { id = team.TeamID},
+                        new { })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.SponsorID }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.sponsor.SponsorID }) |
     @Html.ActionLink("Back to List", "List")
 </p>
