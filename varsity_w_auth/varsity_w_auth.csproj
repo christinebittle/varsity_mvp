@@ -207,6 +207,7 @@
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\Sponsor.cs" />
     <Compile Include="Models\Team.cs" />
+    <Compile Include="Models\ViewModels\ShowPlayer.cs" />
     <Compile Include="Models\ViewModels\ShowTeam.cs" />
     <Compile Include="Models\ViewModels\UpdatePlayer.cs" />
     <Compile Include="Models\ViewModels\UpdateSponsor.cs" />

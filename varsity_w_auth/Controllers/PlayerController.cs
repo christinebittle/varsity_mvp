@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using varsity_w_auth.Models;
+using varsity_w_auth.Models.ViewModels;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Diagnostics;
@@ -59,6 +60,7 @@ namespace varsity_w_auth.Controllers
         // GET: Player/Details/5
         public ActionResult Details(int id)
         {
+            ShowPlayer ViewModel = new ShowPlayer();
             string url = "playerdata/findplayer/" + id;
             HttpResponseMessage response = client.GetAsync(url).Result;
             //Can catch the status code (200 OK, 301 REDIRECT), etc.
@@ -67,7 +69,15 @@ namespace varsity_w_auth.Controllers
             {
                 //Put data into player data transfer object
                 PlayerDto SelectedPlayer = response.Content.ReadAsAsync<PlayerDto>().Result;
-                return View(SelectedPlayer);
+                ViewModel.player = SelectedPlayer;
+
+                
+                url = "playerdata/findteamforplayer/" + id;
+                response = client.GetAsync(url).Result;
+                TeamDto SelectedTeam = response.Content.ReadAsAsync<TeamDto>().Result;
+                ViewModel.team = SelectedTeam;
+
+                return View(ViewModel);
             }
             else
             {
@@ -110,6 +120,8 @@ namespace varsity_w_auth.Controllers
         // GET: Player/Edit/5
         public ActionResult Edit(int id)
         {
+            UpdatePlayer ViewModel = new UpdatePlayer();
+
             string url = "playerdata/findplayer/" + id;
             HttpResponseMessage response = client.GetAsync(url).Result;
             //Can catch the status code (200 OK, 301 REDIRECT), etc.
@@ -118,7 +130,15 @@ namespace varsity_w_auth.Controllers
             {
                 //Put data into player data transfer object
                 PlayerDto SelectedPlayer = response.Content.ReadAsAsync<PlayerDto>().Result;
-                return View(SelectedPlayer);
+                ViewModel.player = SelectedPlayer;
+
+                //get information about teams this player COULD play for.
+                url = "teamdata/getteams";
+                response = client.GetAsync(url).Result;
+                IEnumerable<TeamDto> PotentialTeams = response.Content.ReadAsAsync<IEnumerable<TeamDto>>().Result;
+                ViewModel.allteams = PotentialTeams;
+
+                return View(ViewModel);
             }
             else
             {

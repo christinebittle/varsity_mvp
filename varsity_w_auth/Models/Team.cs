@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -26,8 +27,9 @@ namespace varsity_w_auth.Models
     {
         public int TeamID { get; set; }
 
+        [DisplayName("Team Name")]
         public string TeamName { get; set; }
-
+        [DisplayName("Team Bio")]
         public string TeamBio { get; set; }
     }
 }

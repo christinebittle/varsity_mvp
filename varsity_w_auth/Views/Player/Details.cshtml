@@ -1,4 +1,4 @@
-﻿@model varsity_w_auth.Models.PlayerDto
+﻿@model varsity_w_auth.Models.ViewModels.ShowPlayer
 
 @{
     ViewBag.Title = "Details";
@@ -7,36 +7,43 @@
 <h4>Player</h4>
 
 <div>
-    <div>@Html.ActionLink("Delete", "DeleteConfirm", new { id = Model.PlayerID })</div>    
+    <div>@Html.ActionLink("Delete", "DeleteConfirm", new { id = Model.player.PlayerID })</div>    
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.PlayerFirstName)
+            @Html.DisplayNameFor(model => model.player.PlayerFirstName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.PlayerFirstName)
+            @Html.DisplayFor(model => model.player.PlayerFirstName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.PlayerLastName)
+            @Html.DisplayNameFor(model => model.player.PlayerLastName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.PlayerLastName)
+            @Html.DisplayFor(model => model.player.PlayerLastName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.PlayerBio)
+            @Html.DisplayNameFor(model => model.player.PlayerBio)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.PlayerBio)
+            @Html.DisplayFor(model => model.player.PlayerBio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model=> model.team.TeamName)
+        </dt>
+        <dd>
+            @Html.ActionLink(Model.team.TeamName,"Details","Team", new { id=Model.team.TeamID},new { })
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.PlayerID }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.player.PlayerID }) |
     @Html.ActionLink("Back to List", "List")
 </p>

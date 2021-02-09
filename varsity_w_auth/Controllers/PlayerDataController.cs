@@ -92,6 +92,44 @@ namespace varsity_w_auth.Controllers
         }
 
         /// <summary>
+        /// Finds a particular Team in the database given a player id with a 200 status code. If the Team is not found, return 404.
+        /// </summary>
+        /// <param name="id">The player id</param>
+        /// <returns>Information about the Team, including Team id, bio, first and last name, and teamid</returns>
+        // <example>
+        // GET: api/TeamData/FindTeamForPlayer/5
+        // </example>
+        [HttpGet]
+        [ResponseType(typeof(TeamDto))]
+        public IHttpActionResult FindTeamForPlayer(int id)
+        {
+            //Finds the first team which has any players
+            //that match the input playerid
+            Team Team = db.Teams
+                .Where(t=> t.Players.Any(p=> p.PlayerID==id))
+                .FirstOrDefault();
+            //if not found, return 404 status code.
+            if (Team == null)
+            {
+                return NotFound();
+            }
+
+            //put into a 'friendly object format'
+            TeamDto TeamDto = new TeamDto
+            {
+                TeamID = Team.TeamID,
+                TeamName = Team.TeamName,
+                TeamBio = Team.TeamBio
+            };
+
+
+            //pass along data as 200 status code OK response
+            return Ok(TeamDto);
+        }
+
+        
+
+        /// <summary>
         /// Updates a player in the database given information about the player.
         /// </summary>
         /// <param name="id">The player id</param>

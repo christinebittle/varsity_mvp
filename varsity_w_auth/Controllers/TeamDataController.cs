@@ -61,7 +61,7 @@ namespace varsity_w_auth.Controllers
         /// <param name="id">The input teamid</param>
         /// <returns>A list of players associated with the team</returns>
         /// <example>
-        /// GET: api/TeamData/GetTeams
+        /// GET: api/TeamData/GetPlayersForTeam
         /// </example>
         [ResponseType(typeof(IEnumerable<PlayerDto>))]
         public IHttpActionResult GetPlayersForTeam(int id)
@@ -93,7 +93,7 @@ namespace varsity_w_auth.Controllers
         /// <param name="id">The input teamid</param>
         /// <returns>A list of Sponsors including their ID, name, and URL.</returns>
         /// <example>
-        /// GET: api/SponsorData/GetSponsors
+        /// GET: api/SponsorData/GetSponsorsForTeam
         /// </example>
         [ResponseType(typeof(IEnumerable<SponsorDto>))]
         public IHttpActionResult GetSponsorsForTeam(int id)

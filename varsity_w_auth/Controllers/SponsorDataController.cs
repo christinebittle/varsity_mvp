@@ -60,11 +60,15 @@ namespace varsity_w_auth.Controllers
         /// <param name="id">The input sponsor id</param>
         /// <returns>A list of Teams including their ID, name, and URL.</returns>
         /// <example>
-        /// GET: api/TeamData/GetTeams
+        /// GET: api/TeamData/GetTeamsForSponsor
         /// </example>
         [ResponseType(typeof(IEnumerable<TeamDto>))]
         public IHttpActionResult GetTeamsForSponsor(int id)
         {
+            //sql equivalent
+            //select * from teams
+            //inner join sponsorteams on sponsorteams.teamid = teams.teamid
+            //inner join sponsors on sponsors.sponsorid = sponsorteams.sponsorid
             List<Team> Teams = db.Teams
                 .Where(t => t.Sponsors.Any(s => s.SponsorID == id))
                 .ToList();
