@@ -10,6 +10,7 @@ This example demonstrates a full MVP functionality for Create, Read, Update, and
 
 
 ![Update Sponsor](https://github.com/christinebittle/varsity_mvp/blob/master/varsity_w_auth/assets/updatesponsor.png)
+![Show Sponsor](https://github.com/christinebittle/varsity_mvp/blob/master/varsity_w_auth/assets/showsponsor.png)
 
 
 ![Show Team](https://github.com/christinebittle/varsity_mvp/blob/master/varsity_w_auth/assets/showteam.png)
