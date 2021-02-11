@@ -1,7 +1,7 @@
 # Varsity Project MVP
 This example demonstrates how to create the MVP functionality for Create, Read, Update, and Delete.
 
-
+![Listing Players](https://github.com/christinebittle/varsity_mvp/tree/master/varsity_w_auth/assets/listplayers.png)
 
 ## To Run This Project
 - Clone Codebase
