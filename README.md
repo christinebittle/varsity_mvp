@@ -3,6 +3,18 @@ This example demonstrates how to create the MVP functionality for Create, Read, 
 
 ![Listing Players](https://github.com/christinebittle/varsity_mvp/blob/master/varsity_w_auth/assets/listplayers.png)
 
+![Updating a player](https://github.com/christinebittle/varsity_mvp/blob/master/varsity_w_auth/assets/updateplayer.png)
+
+
+![Listing Sponsors](https://github.com/christinebittle/varsity_mvp/blob/master/varsity_w_auth/assets/listsponsors.png)
+
+
+![Update Sponsor](https://github.com/christinebittle/varsity_mvp/blob/master/varsity_w_auth/assets/updatesponsor.png)
+
+
+![Show Team](https://github.com/christinebittle/varsity_mvp/blob/master/varsity_w_auth/assets/showteam.png)
+
+
 ## To Run This Project
 - Clone Codebase
 - **Right Click Project > View Project in File Explorer > Create Folder "App_Data"**
