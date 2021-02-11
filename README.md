@@ -1,5 +1,5 @@
 # Varsity Project MVP
-This example demonstrates how to create the MVP functionality for Create, Read, Update, and Delete.
+This example demonstrates a full MVP functionality for Create, Read, Update, and Delete. The relationships can also be modified through the web interface.
 
 ![Listing Players](https://github.com/christinebittle/varsity_mvp/blob/master/varsity_w_auth/assets/listplayers.png)
 
