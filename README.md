@@ -1,5 +1,7 @@
 # Varsity Project MVP
-This example demonstrates how to create the MVP functionality for Create, Read, Update, and Delete
+This example demonstrates how to create the MVP functionality for Create, Read, Update, and Delete.
+
+
 
 ## To Run This Project
 - Clone Codebase
@@ -8,3 +10,16 @@ This example demonstrates how to create the MVP functionality for Create, Read, 
 - enable-migrations
 - add-migration {migration_name}
 - update-database
+
+## Common Issues
+# Unable to access part of path ... roslyn/csc.exe
+- Right click solution > Clean
+- Right click solution > Build
+- Right click solution > Rebuild
+
+# Update Database failed. Could not create .mdf file
+- Create "App_Data" Folder in project
+
+# The name or namespace 'Script'/'JavaScriptSerializer' could not be found
+- Right click "References"
+- Add System.Web.Extensions
