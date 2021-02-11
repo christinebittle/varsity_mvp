@@ -25,21 +25,21 @@ This example demonstrates how to create the MVP functionality for Create, Read, 
 - update portnumber in PlayerController.cs, TeamController.cs, SponsorController.cs
 
 ## Common Issues
-# Unable to access part of path ... roslyn/csc.exe
+### Unable to access part of path ... roslyn/csc.exe
 - Right click solution > Clean
 - Right click solution > Build
 - Right click solution > Rebuild
 
-# Update Database failed. Could not create .mdf file
+### Update Database failed. Could not create .mdf file
 - Create "App_Data" Folder in project
 
-# The name or namespace 'Script'/'JavaScriptSerializer' could not be found
+### The name or namespace 'Script'/'JavaScriptSerializer' could not be found
 - Right click "References"
 - Add System.Web.Extensions
 
-# Every Action says something went wrong
+### Every Action says something went wrong
 - Update the port number to the current port your local project is using
 - update portnumber defined in PlayerController.cs, TeamController.cs, SponsorController.cs
 
-# Adding a player leads to an error
+### Adding a player leads to an error
 - Add a team first, each player must play for a team
