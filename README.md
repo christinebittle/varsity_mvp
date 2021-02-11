@@ -22,6 +22,7 @@ This example demonstrates how to create the MVP functionality for Create, Read, 
 - enable-migrations
 - add-migration {migration_name}
 - update-database
+- update portnumber in PlayerController.cs, TeamController.cs, SponsorController.cs
 
 ## Common Issues
 # Unable to access part of path ... roslyn/csc.exe
@@ -35,3 +36,10 @@ This example demonstrates how to create the MVP functionality for Create, Read, 
 # The name or namespace 'Script'/'JavaScriptSerializer' could not be found
 - Right click "References"
 - Add System.Web.Extensions
+
+# Every Action says something went wrong
+- Update the port number to the current port your local project is using
+- update portnumber defined in PlayerController.cs, TeamController.cs, SponsorController.cs
+
+# Adding a player leads to an error
+- Add a team first, each player must play for a team
