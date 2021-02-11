@@ -70,28 +70,22 @@ namespace varsity_w_auth.Controllers
                 //Put data into Sponsor data transfer object
                 SponsorDto SelectedSponsor = response.Content.ReadAsAsync<SponsorDto>().Result;
                 ViewModel.sponsor = SelectedSponsor;
-            }
-            else
-            {
-                return RedirectToAction("Error");
-            }
 
-            url = "sponsordata/getteamsforsponsor/" + id;
-            response = client.GetAsync(url).Result;
-            //Can catch the status code (200 OK, 301 REDIRECT), etc.
-            //Debug.WriteLine(response.StatusCode);
-            if (response.IsSuccessStatusCode)
-            {
+                //find teams that are sponsored by this sponsor
+                url = "sponsordata/getteamsforsponsor/" + id;
+                response = client.GetAsync(url).Result;
+
                 //Put data into Sponsor data transfer object
                 IEnumerable<TeamDto> SelectedTeams = response.Content.ReadAsAsync<IEnumerable<TeamDto>>().Result;
                 ViewModel.sponsoredteams = SelectedTeams;
+
+                return View(ViewModel);
             }
             else
             {
                 return RedirectToAction("Error");
-            }
 
-            return View(ViewModel);
+            }
 
         }
 
@@ -130,7 +124,9 @@ namespace varsity_w_auth.Controllers
         // GET: Sponsor/Edit/5
         public ActionResult Edit(int id)
         {
-            string url = "Sponsordata/findsponsor/" + id;
+            UpdateSponsor ViewModel = new UpdateSponsor();
+
+            string url = "sponsordata/findsponsor/" + id;
             HttpResponseMessage response = client.GetAsync(url).Result;
             //Can catch the status code (200 OK, 301 REDIRECT), etc.
             //Debug.WriteLine(response.StatusCode);
@@ -138,7 +134,67 @@ namespace varsity_w_auth.Controllers
             {
                 //Put data into Sponsor data transfer object
                 SponsorDto SelectedSponsor = response.Content.ReadAsAsync<SponsorDto>().Result;
-                return View(SelectedSponsor);
+                ViewModel.sponsor = SelectedSponsor;
+
+                //find teams that are sponsored by this sponsor
+                url = "sponsordata/getteamsforsponsor/" + id;
+                response = client.GetAsync(url).Result;
+
+                //Put data into Sponsor data transfer object
+                IEnumerable<TeamDto> SelectedTeams = response.Content.ReadAsAsync<IEnumerable<TeamDto>>().Result;
+                ViewModel.sponsoredteams = SelectedTeams;
+
+                //find teams that are not sponsored by this sponsor
+                url = "sponsordata/getteamsnotsponsored/" + id;
+                response = client.GetAsync(url).Result;
+
+                //put data into data transfer object
+                IEnumerable<TeamDto> UnsponsoredTeams = response.Content.ReadAsAsync<IEnumerable<TeamDto>>().Result;
+                ViewModel.allteams = UnsponsoredTeams;
+
+                return View(ViewModel);
+            }
+            else
+            {
+                return RedirectToAction("Error");
+
+            }
+        }
+
+        // GET: Sponsor/Unsponsor/teamid/sponsorid
+        [HttpGet]
+        [Route("Sponsor/Unsponsor/{teamid}/{sponsorid}")]
+        public ActionResult Unsponsor(int teamid, int sponsorid)
+        {
+            string url = "sponsordata/unsponsor/" + teamid + "/" + sponsorid;
+            HttpResponseMessage response = client.GetAsync(url).Result;
+            //Can catch the status code (200 OK, 301 REDIRECT), etc.
+            //Debug.WriteLine(response.StatusCode);
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Edit", new { id = sponsorid });
+            }
+            else
+            {
+                return RedirectToAction("Error");
+            }
+        }
+
+        // POST: sponsor/sponsor
+        // First sponsor is the noun (the sponsor themselves)
+        // second sponsor is the verb (the act of sponsoring)
+        // The sponsor(1) sponsors(2) a team
+        [HttpPost]
+        [Route("Sponsor/sponsor/{teamid}/{sponsorid}")]
+        public ActionResult Sponsor(int teamid, int sponsorid)
+        {
+            string url = "sponsordata/sponsor/" + teamid + "/" + sponsorid;
+            HttpResponseMessage response = client.GetAsync(url).Result;
+            //Can catch the status code (200 OK, 301 REDIRECT), etc.
+            //Debug.WriteLine(response.StatusCode);
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("Edit", new { id = sponsorid });
             }
             else
             {
@@ -160,10 +216,13 @@ namespace varsity_w_auth.Controllers
 
             if (response.IsSuccessStatusCode)
             {
+                Debug.WriteLine("update sponsor request succeeded");
                 return RedirectToAction("Details", new { id = id });
             }
             else
             {
+                Debug.WriteLine("update sponsor request failed");
+                Debug.WriteLine(response.StatusCode.ToString());
                 return RedirectToAction("Error");
             }
         }

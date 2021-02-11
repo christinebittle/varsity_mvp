@@ -217,7 +217,13 @@
   <ItemGroup>
     <Content Include="assets\cookie_requestauth.png" />
     <Content Include="assets\curl_cookie.png" />
+    <Content Include="assets\listplayers.png" />
+    <Content Include="assets\listsponsors.png" />
     <Content Include="assets\local_cookies.png" />
+    <Content Include="assets\showsponsor.png" />
+    <Content Include="assets\showteam.png" />
+    <Content Include="assets\updateplayer.png" />
+    <Content Include="assets\updatesponsor.png" />
     <Content Include="assets\varsity_account.png" />
     <Content Include="assets\varsity_with_auth_schema.png" />
     <Content Include="Content\bootstrap-theme.css" />

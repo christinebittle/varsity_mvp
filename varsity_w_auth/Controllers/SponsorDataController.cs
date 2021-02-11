@@ -55,7 +55,7 @@ namespace varsity_w_auth.Controllers
         }
 
         /// <summary>
-        /// Gets a list or Teams in the database alongside a status code (200 OK).
+        /// Gets a list or Teams in the database associated with a particular sponsor. Returns a status code (200 OK)
         /// </summary>
         /// <param name="id">The input sponsor id</param>
         /// <returns>A list of Teams including their ID, name, and URL.</returns>
@@ -71,6 +71,37 @@ namespace varsity_w_auth.Controllers
             //inner join sponsors on sponsors.sponsorid = sponsorteams.sponsorid
             List<Team> Teams = db.Teams
                 .Where(t => t.Sponsors.Any(s => s.SponsorID == id))
+                .ToList();
+            List<TeamDto> TeamDtos = new List<TeamDto> { };
+
+            //Here you can choose which information is exposed to the API
+            foreach (var Team in Teams)
+            {
+                TeamDto NewTeam = new TeamDto
+                {
+                    TeamID = Team.TeamID,
+                    TeamName = Team.TeamName,
+                    TeamBio = Team.TeamBio
+                };
+                TeamDtos.Add(NewTeam);
+            }
+
+            return Ok(TeamDtos);
+        }
+
+        /// <summary>
+        /// Gets a list or Teams in the database NOT associated with a sponsor. These could be potentially sponsored teams.
+        /// </summary>
+        /// <param name="id">The input sponsor id</param>
+        /// <returns>A list of Teams including their ID, name, and URL.</returns>
+        /// <example>
+        /// GET: api/TeamData/GetTeamsForSponsor
+        /// </example>
+        [ResponseType(typeof(IEnumerable<TeamDto>))]
+        public IHttpActionResult GetTeamsNotSponsored(int id)
+        {
+            List<Team> Teams = db.Teams
+                .Where(t => !t.Sponsors.Any(s => s.SponsorID == id))
                 .ToList();
             List<TeamDto> TeamDtos = new List<TeamDto> { };
 
@@ -216,6 +247,78 @@ namespace varsity_w_auth.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Deletes a relationship between a particular team and a sponsor
+        /// </summary>
+        /// <param name="teamid">The team id</param>
+        /// <param name="sponsorid">The Sponsor id</param>
+        /// <returns>status code of 200 OK</returns>
+        [HttpGet]
+        [Route("api/sponsordata/unsponsor/{teamid}/{sponsorid}")]
+        public IHttpActionResult Unsponsor(int teamid, int sponsorid)
+        {
+            //First select the sponsor (also loading in team data)
+            Sponsor SelectedSponsor = db.Sponsors
+                .Include(s=>s.Teams)
+                .Where(s=>s.SponsorID==sponsorid)
+                .FirstOrDefault();
+
+            //Then select the team
+            Team SelectedTeam = db.Teams.Find(teamid);
+
+            //Debug.WriteLine("Selected Sponsor is.. " + SelectedSponsor.SponsorName);
+            //Debug.WriteLine("Selected Team is.. " + SelectedTeam.TeamName);
+
+            if (SelectedSponsor == null || SelectedTeam == null || !SelectedSponsor.Teams.Contains(SelectedTeam))
+            {
+
+                return NotFound();
+            }
+            else
+            {
+                //Remove the sponsor from the team
+                SelectedSponsor.Teams.Remove(SelectedTeam);
+                db.SaveChanges();
+                return Ok();
+            }
+        }
+
+        /// <summary>
+        /// Adds a relationship between a particular team and a sponsor
+        /// </summary>
+        /// <param name="teamid">The team id</param>
+        /// <param name="sponsorid">The Sponsor id</param>
+        /// <returns>status code of 200 OK</returns>
+        [HttpGet]
+        [Route("api/sponsordata/sponsor/{teamid}/{sponsorid}")]
+        public IHttpActionResult Sponsor(int teamid, int sponsorid)
+        {
+            //First select the sponsor (also loading in team data)
+            Sponsor SelectedSponsor = db.Sponsors
+                .Include(s => s.Teams)
+                .Where(s => s.SponsorID == sponsorid)
+                .FirstOrDefault();
+
+            //Then select the team
+            Team SelectedTeam = db.Teams.Find(teamid);
+
+            //Debug.WriteLine("Selected Sponsor is.. " + SelectedSponsor.SponsorName);
+            //Debug.WriteLine("Selected Team is.. " + SelectedTeam.TeamName);
+
+            if (SelectedSponsor == null || SelectedTeam == null || SelectedSponsor.Teams.Contains(SelectedTeam))
+            {
+
+                return NotFound();
+            }
+            else
+            {
+                //Remove the sponsor from the team
+                SelectedSponsor.Teams.Add(SelectedTeam);
+                db.SaveChanges();
+                return Ok();
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -233,6 +336,11 @@ namespace varsity_w_auth.Controllers
         private bool SponsorExists(int id)
         {
             return db.Sponsors.Count(e => e.SponsorID == id) > 0;
+        }
+
+        private bool SponsorAssociated(int teamid, int sponsorid)
+        {
+            return true;
         }
     }
 }

@@ -1,44 +1,89 @@
-﻿@model varsity_w_auth.Models.SponsorDto
+﻿@model varsity_w_auth.Models.ViewModels.UpdateSponsor
 
 @{
     ViewBag.Title = "View";
 }
 
-<h2>Update</h2>
+<h2>Update Sponsor</h2>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+
     
     <div class="form-horizontal">
-        <h4>Sponsor</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.SponsorID)
+        <div>
+            <div style="width:59%; margin-right:2%; float:left;">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.sponsor.SponsorID, new { Name = "SponsorID" })
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.SponsorName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SponsorName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SponsorName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.SponsorURL, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.SponsorURL, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.SponsorURL, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.sponsor.SponsorName, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.sponsor.SponsorName, new { htmlAttributes = new { @class = "form-control", Name = "SponsorName" } })
+                            @Html.ValidationMessageFor(model => model.sponsor.SponsorName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.sponsor.SponsorURL, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.sponsor.SponsorURL, new { htmlAttributes = new { @class = "form-control", Name = "SponsorURL" } })
+                            @Html.ValidationMessageFor(model => model.sponsor.SponsorURL, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Save" class="btn btn-default" />
+                        </div>
+                    </div>
+                }
             </div>
+            <div style="width:39%; margin: 0 auto; float:left;">
+                <h4>Teams Sponsored:</h4>
+                <div>
+                    @foreach (var team in Model.sponsoredteams)
+                    {
+                        <div>
+                            @Html.ActionLink(
+                            team.TeamName,
+                            "Details",
+                            "Team",
+                            new { id = team.TeamID },
+                            new { })
+
+                            @Html.ActionLink(
+                           "[x]",
+                           "Unsponsor",
+                           "Sponsor",
+                           new { teamid = team.TeamID, sponsorid = Model.sponsor.SponsorID },
+                           new { @class = "text-danger" })
+                        </div>
+                    }
+                </div>
+                <div>
+                    <h3>Sponsor Team:</h3>
+                    <div>
+                        <form method="POST" action="/Sponsor/Sponsor">
+                            <select name="TeamID">
+                                @foreach (var team in Model.allteams)
+                                {
+                                    <option value="@team.TeamID">@team.TeamName</option>
+                                }
+                            </select>
+                            <input type="number" name="SponsorID" value="@Model.sponsor.SponsorID" style="display:none;" />
+                            <input type="submit" value="Sponsor Team" />
+                        </form>
+                    
+                  
+                    </div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
         </div>
     </div>
-}
+
 
 <div>
     @Html.ActionLink("Back to List", "List")
