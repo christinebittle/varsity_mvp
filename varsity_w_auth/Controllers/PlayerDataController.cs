@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Web;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -48,6 +50,8 @@ namespace varsity_w_auth.Controllers
                     PlayerBio = Player.PlayerBio,
                     PlayerFirstName = Player.PlayerFirstName,
                     PlayerLastName = Player.PlayerLastName,
+                    PlayerHasPic = Player.PlayerHasPic,
+                    PicExtension = Player.PicExtension,
                     TeamID = Player.TeamID
                 };
                 PlayerDtos.Add(NewPlayer);
@@ -83,6 +87,8 @@ namespace varsity_w_auth.Controllers
                 PlayerBio = Player.PlayerBio,
                 PlayerFirstName = Player.PlayerFirstName,
                 PlayerLastName = Player.PlayerLastName,
+                PlayerHasPic = Player.PlayerHasPic,
+                PicExtension = Player.PicExtension,
                 TeamID = Player.TeamID
             };
 
@@ -143,6 +149,8 @@ namespace varsity_w_auth.Controllers
         [HttpPost]
         public IHttpActionResult UpdatePlayer(int id, [FromBody] Player player)
         {
+            
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -153,12 +161,12 @@ namespace varsity_w_auth.Controllers
                 return BadRequest();
             }
 
+            
             db.Entry(player).State = EntityState.Modified;
 
             try
             {
                 db.SaveChanges();
-                
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -173,6 +181,82 @@ namespace varsity_w_auth.Controllers
             }
 
             return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
+        /// Receives player picture data, uploads it to the webserver and updates the player's HasPic option
+        /// </summary>
+        /// <param name="id">the player id</param>
+        /// <returns>status code 200 if successful.</returns>
+        /// <example>
+        /// curl -F playerpic=@file.jpg "https://localhost:xx/api/playerdata/updateplayerpic/2"
+        /// POST: api/PlayerData/UpdatePlayerPic/3
+        /// HEADER: enctype=multipart/form-data
+        /// FORM-DATA: image
+        /// </example>
+        /// https://stackoverflow.com/questions/28369529/how-to-set-up-a-web-api-controller-for-multipart-form-data
+
+        [HttpPost]
+        public IHttpActionResult UpdatePlayerPic(int id)
+        {
+
+            bool haspic = false;
+            string picextension;
+            if (Request.Content.IsMimeMultipartContent())
+            {
+                Debug.WriteLine("Received multipart form data.");
+
+                int numfiles = HttpContext.Current.Request.Files.Count;
+                Debug.WriteLine("Files Received: "+numfiles);
+
+                //Check if a file is posted
+                if(numfiles==1 && HttpContext.Current.Request.Files[0] != null)
+                {
+                    var PlayerPic = HttpContext.Current.Request.Files[0];
+                    //Check if the file is empty
+                    if (PlayerPic.ContentLength > 0)
+                    {
+                        var valtypes = new[] { "jpeg", "jpg", "png", "gif" };
+                        var extension = Path.GetExtension(PlayerPic.FileName).Substring(1);
+                        //Check the extension of the file
+                        if (valtypes.Contains(extension))
+                        {
+                            try
+                            {
+                                //file name is the id of the image
+                                string fn = id + "." + extension;
+
+                                //get a direct file path to ~/Content/Players/{id}.{extension}
+                                string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Content/Players/"), fn);
+
+                                //save the file
+                                PlayerPic.SaveAs(path);
+
+                                //if these are all successful then we can set these fields
+                                haspic = true;
+                                picextension = extension;
+
+                                //Update the player haspic and picextension fields in the database
+                                Player SelectedPlayer = db.Players.Find(id);
+                                SelectedPlayer.PlayerHasPic = haspic;
+                                SelectedPlayer.PicExtension = extension;
+                                db.Entry(SelectedPlayer).State = EntityState.Modified;
+
+                                db.SaveChanges();
+
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine("Player Image was not saved successfully.");
+                                Debug.WriteLine("Exception:" + ex);
+                            }
+                        }
+                    }
+                    
+                }
+            }
+
+            return Ok();
         }
 
 
@@ -216,6 +300,13 @@ namespace varsity_w_auth.Controllers
             if (player == null)
             {
                 return NotFound();
+            }
+            //also delete image from path
+            string path = HttpContext.Current.Server.MapPath("~/Content/Players/" + id + "." + player.PicExtension);
+            if(System.IO.File.Exists(path))
+            {
+                Debug.WriteLine("File exists... preparing to delete!");
+                System.IO.File.Delete(path);
             }
 
             db.Players.Remove(player);

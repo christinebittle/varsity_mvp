@@ -9,38 +9,35 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.PlayerFirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PlayerLastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PlayerBio)
-        </th>
-        <th></th>
-    </tr>
+<div class="record-container">
+    @foreach (var player in Model)
+    {
+    <div class="record">
+            <div class="_record">
+            @{
+                //Use server rendering to determine an image
+                string pic = "/Content/Players/default.jpg";
+                string alt = "No Profile Picture Provided.";
+                if (player.PlayerHasPic)
+                {
+                    pic = "/Content/Players/" + player.PlayerID + "." + player.PicExtension;
+                    alt = "Profile shot of " + player.PlayerFirstName + " " + player.PlayerLastName;
+                }
+            }
+            <nav class="linknav">
+                <span class="editlink">@Html.ActionLink("Edit", "Edit", new { id = player.PlayerID })</span>
+            </nav>
+            <div class="imagecontainer">
+                <img src="@pic" alt="@alt" />
+            </div>
+            <div class="recordtitle">
+                @Html.ActionLink(player.PlayerFirstName + " " + player.PlayerLastName,
+               "Details",
+               new { id = player.PlayerID })
+            </div>
 
-@foreach (var item in Model) {
-    <tr>
-        
-        <td>
-            @Html.DisplayFor(modelItem => item.PlayerFirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PlayerLastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PlayerBio)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.PlayerID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.PlayerID })
-            
-        </td>
-    </tr>
-}
 
-</table>
+        </div>
+    </div>
+    }
+</div>

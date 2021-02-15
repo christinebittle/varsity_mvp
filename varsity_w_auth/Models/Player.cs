@@ -21,6 +21,11 @@ namespace varsity_w_auth.Models
 
         public string PlayerBio { get; set; }
 
+        public bool PlayerHasPic { get; set; }
+
+        //If the player has an image, record the extension of the image (.png, .gif, .jpg, etc.)
+        public string PicExtension { get; set; }
+
         //Foreign keys in Entity Framework
         /// https://www.entityframeworktutorial.net/code-first/foreignkey-dataannotations-attribute-in-code-first.aspx
 
@@ -44,6 +49,9 @@ namespace varsity_w_auth.Models
         public string PlayerLastName { get; set; }
         [DisplayName("Player Bio")]
         public string PlayerBio { get; set; }
+
+        public bool PlayerHasPic { get; set; }
+        public string PicExtension { get; set; }
 
         public int TeamID { get; set; }
     }

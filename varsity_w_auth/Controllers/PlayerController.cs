@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.IO;
 using varsity_w_auth.Models;
 using varsity_w_auth.Models.ViewModels;
 using System.Net.Http;
@@ -88,7 +89,14 @@ namespace varsity_w_auth.Controllers
         // GET: Player/Create
         public ActionResult Create()
         {
-            return View();
+            UpdatePlayer ViewModel = new UpdatePlayer();
+            //get information about teams this player COULD play for.
+            string url = "teamdata/getteams";
+            HttpResponseMessage response = client.GetAsync(url).Result;
+            IEnumerable<TeamDto> PotentialTeams = response.Content.ReadAsAsync<IEnumerable<TeamDto>>().Result;
+            ViewModel.allteams = PotentialTeams;
+
+            return View(ViewModel);
         }
 
         // POST: Player/Create
@@ -149,7 +157,7 @@ namespace varsity_w_auth.Controllers
         // POST: Player/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken()]
-        public ActionResult Edit(int id, Player PlayerInfo)
+        public ActionResult Edit(int id, Player PlayerInfo, HttpPostedFileBase PlayerPic)
         {
             Debug.WriteLine(PlayerInfo.PlayerFirstName);
             string url = "playerdata/updateplayer/"+id;
@@ -160,6 +168,15 @@ namespace varsity_w_auth.Controllers
             Debug.WriteLine(response.StatusCode);
             if (response.IsSuccessStatusCode)
             {
+
+                //Send over image data for player
+                url = "playerdata/updateplayerpic/"+id;
+                Debug.WriteLine("Received player picture "+PlayerPic.FileName);
+
+                MultipartFormDataContent requestcontent = new MultipartFormDataContent();
+                HttpContent imagecontent = new StreamContent(PlayerPic.InputStream);
+                requestcontent.Add(imagecontent,"PlayerPic",PlayerPic.FileName);
+                response = client.PostAsync(url, requestcontent).Result;
                 
                 return RedirectToAction("Details", new { id = id });
             }

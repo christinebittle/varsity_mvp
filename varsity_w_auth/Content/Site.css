@@ -22,3 +22,28 @@ select,
 textarea {
     max-width: 280px;
 }
+
+
+.record {
+    /*4 column layout*/
+    width: 22%;
+    margin-right: 1.5%;
+    margin-left: 1.5%;
+    float: left;
+    position: relative;
+    border: 1px solid #dedede;
+    margin-bottom: 20px;
+}
+._record{padding:10px;}
+.recordtitle{text-align:center; margin-top:15px;}
+.imagecontainer{border-radius:50%; overflow:hidden; width:80%; margin: 0 auto; }
+.imagecontainer.featured{max-width:200px;}
+.imagecontainer img{width:100%;}
+.linknav{overflow:hidden; font-size:10px;}
+.linknav:after{clear:both;}
+.editlink {float:right;}
+
+.record-container{
+    overflow:hidden;
+    padding:10px;
+}
