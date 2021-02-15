@@ -3,6 +3,8 @@ This example demonstrates a full MVP functionality for Create, Read, Update, and
 
 ![Listing Players](https://github.com/christinebittle/varsity_mvp/blob/master/varsity_w_auth/assets/listplayers.png)
 
+![Showing Player](https://github.com/christinebittle/varsity_mvp/blob/master/varsity_w_auth/assets/showplayer.png)
+
 ![Updating a player](https://github.com/christinebittle/varsity_mvp/blob/master/varsity_w_auth/assets/updateplayer.png)
 
 
