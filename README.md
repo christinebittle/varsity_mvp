@@ -46,3 +46,8 @@ This example demonstrates a full MVP functionality for Create, Read, Update, and
 
 ### Adding a player leads to an error
 - Add a team first, each player must play for a team
+
+References
+- [Previous Project PetGrooming](https://github.com/christinebittle/PetGroomingMVC)
+- [Previous Project BlogProject 7th iteration](https://github.com/christinebittle/BlogProject_7)
+- [Utilized Lightbox plugin by Lokesh Dhakar](https://lokeshdhakar.com/projects/lightbox2/)
