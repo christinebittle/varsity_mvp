@@ -1,7 +1,4 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
-}
+﻿
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
@@ -23,6 +20,9 @@ textarea {
     max-width: 280px;
 }
 
+body {
+    font-family: 'Roboto', sans-serif;
+}
 
 .record {
     /*4 column layout*/
@@ -46,4 +46,37 @@ textarea {
 .record-container{
     overflow:hidden;
     padding:10px;
+}
+
+footer p{font-size:12px;}
+footer{padding-top:50px;}
+
+/*feel free to change any of the bootstrap classes*/
+.navbar-inverse {
+    border-radius: 0px;
+    background: #F6E71D;
+}
+
+.navbar-inverse .navbar-nav > li > a, .navbar-inverse .navbar-brand {
+    color: #181818;
+    font-weight: 400;
+}
+
+
+@media screen and (max-width:700px) {
+    /*change to two column*/
+    .record {
+        width: 48%;
+        margin-left: 1%;
+        margin-right: 1%;
+    }
+}
+
+@media screen and (max-width:500px){
+    /*change to one column*/
+    .record {
+        width: 98%;
+        margin-left: 1%;
+        margin-right: 1%;
+    }
 }

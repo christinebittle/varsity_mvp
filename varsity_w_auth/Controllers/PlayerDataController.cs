@@ -33,9 +33,10 @@ namespace varsity_w_auth.Controllers
         /// </summary>
         /// <returns>A list of players including their ID, bio, first name, last name, and teamid.</returns>
         /// <example>
-        /// GET: api/PlayerData/GetPlayers
+        /// GET : api/playerdata/getplayers
         /// </example>
         [ResponseType(typeof(IEnumerable<PlayerDto>))]
+        [Route("api/playerdata/getplayers")]
         public IHttpActionResult GetPlayers()
         {
             List<Player> Players = db.Players.ToList();
@@ -59,6 +60,47 @@ namespace varsity_w_auth.Controllers
 
             return Ok(PlayerDtos);
         }
+
+        /// <summary>
+        /// Gets a list or players in the database alongside a status code (200 OK). Skips the first {startindex} records and takes {perpage} records.
+        /// </summary>
+        /// <returns>A list of players including their ID, bio, first name, last name, and teamid.</returns>
+        /// <param name="StartIndex">The number of records to skip through</param>
+        /// <param name="PerPage">The number of records for each page</param>
+        /// <example>
+        /// GET: api/PlayerData/GetPlayers/20/5
+        /// Retrieves the first 5 players after skipping 20 (fifth page)
+        /// 
+        /// GET: api/PlayerData/GetPlayers/15/3
+        /// Retrieves the first 3 players after skipping 15 (sixth page)
+        /// 
+        /// </example>
+        [ResponseType(typeof(IEnumerable<PlayerDto>))]
+        [Route("api/playerdata/getplayerspage/{StartIndex}/{PerPage}")]
+        public IHttpActionResult GetPlayersPage(int StartIndex, int PerPage)
+        {
+            List<Player> Players = db.Players.OrderBy(p => p.PlayerID).Skip(StartIndex).Take(PerPage).ToList();
+            List<PlayerDto> PlayerDtos = new List<PlayerDto> { };
+
+            //Here you can choose which information is exposed to the API
+            foreach (var Player in Players)
+            {
+                PlayerDto NewPlayer = new PlayerDto
+                {
+                    PlayerID = Player.PlayerID,
+                    PlayerBio = Player.PlayerBio,
+                    PlayerFirstName = Player.PlayerFirstName,
+                    PlayerLastName = Player.PlayerLastName,
+                    PlayerHasPic = Player.PlayerHasPic,
+                    PicExtension = Player.PicExtension,
+                    TeamID = Player.TeamID
+                };
+                PlayerDtos.Add(NewPlayer);
+            }
+
+            return Ok(PlayerDtos);
+        }
+
 
         /// <summary>
         /// Finds a particular player in the database with a 200 status code. If the player is not found, return 404.
@@ -163,6 +205,9 @@ namespace varsity_w_auth.Controllers
 
             
             db.Entry(player).State = EntityState.Modified;
+            // Picture update is handled by another method
+            db.Entry(player).Property(p => p.PlayerHasPic).IsModified = false;
+            db.Entry(player).Property(p => p.PicExtension).IsModified = false;
 
             try
             {
@@ -301,12 +346,15 @@ namespace varsity_w_auth.Controllers
             {
                 return NotFound();
             }
-            //also delete image from path
-            string path = HttpContext.Current.Server.MapPath("~/Content/Players/" + id + "." + player.PicExtension);
-            if(System.IO.File.Exists(path))
-            {
-                Debug.WriteLine("File exists... preparing to delete!");
-                System.IO.File.Delete(path);
+            if(player.PlayerHasPic && player.PicExtension!="")
+            { 
+                //also delete image from path
+                string path = HttpContext.Current.Server.MapPath("~/Content/Players/" + id + "." + player.PicExtension);
+                if(System.IO.File.Exists(path))
+                {
+                    Debug.WriteLine("File exists... preparing to delete!");
+                    System.IO.File.Delete(path);
+                }
             }
 
             db.Players.Remove(player);

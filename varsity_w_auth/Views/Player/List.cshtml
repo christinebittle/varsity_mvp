@@ -9,6 +9,15 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+<div class="paginate">
+    @{
+        int PrevPage = Convert.ToInt32(ViewData["PageNum"]) - 1;
+        int NextPage = Convert.ToInt32(ViewData["PageNum"]) + 1;
+        @Html.ActionLink("Prev", "List", new { PageNum = PrevPage })
+        @ViewData["PageSummary"]
+        @Html.ActionLink("Next", "List", new { PageNum = NextPage })
+    }
+</div>
 <div class="record-container">
     @foreach (var player in Model)
     {
@@ -28,7 +37,9 @@
                 <span class="editlink">@Html.ActionLink("Edit", "Edit", new { id = player.PlayerID })</span>
             </nav>
             <div class="imagecontainer">
-                <img src="@pic" alt="@alt" />
+                <a data-lightbox="player-@player.PlayerID" href="@pic" data-title="@alt">
+                    <img src="@pic" alt="@alt" />
+                </a>
             </div>
             <div class="recordtitle">
                 @Html.ActionLink(player.PlayerFirstName + " " + player.PlayerLastName,

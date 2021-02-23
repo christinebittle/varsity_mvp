@@ -42,20 +42,67 @@ namespace varsity_w_auth.Controllers
 
 
 
-        // GET: Player/List
-        public ActionResult List()
+        // GET: Player/List?{PageNum}
+        // If the page number is not included, set it to 0
+        public ActionResult List(int PageNum=0)
         {
+            // Grab all players
             string url = "playerdata/getplayers";
+            // Send off an HTTP request
+            // GET : /api/playerdata/getplayers
+            // Retrieve response
             HttpResponseMessage response = client.GetAsync(url).Result;
+            // If the response is a success, proceed
             if (response.IsSuccessStatusCode)
             {
+                // Fetch the response content into IEnumerable<PlayerDto>
                 IEnumerable<PlayerDto> SelectedPlayers = response.Content.ReadAsAsync<IEnumerable<PlayerDto>>().Result;
-                return View(SelectedPlayers);
+
+                // -- Start of Pagination Algorithm --
+
+                // Find the total number of players
+                int PlayerCount = SelectedPlayers.Count();
+                // Number of players to display per page
+                int PerPage = 4;
+                // Determines the maximum number of pages (rounded up), assuming a page 0 start.
+                int MaxPage = (int)Math.Ceiling((decimal)PlayerCount / PerPage) - 1;
+
+                // Lower boundary for Max Page
+                if (MaxPage < 0) MaxPage = 0;
+                // Lower boundary for Page Number
+                if (PageNum < 0) PageNum = 0;
+                // Upper Bound for Page Number
+                if (PageNum > MaxPage) PageNum = MaxPage;
+
+                // The Record Index of our Page Start
+                int StartIndex = PerPage * PageNum;
+
+                //Helps us generate the HTML which shows "Page 1 of ..." on the list view
+                ViewData["PageNum"] = PageNum;
+                ViewData["PageSummary"] = " "+(PageNum + 1) + " of " + (MaxPage + 1)+" ";
+
+                // -- End of Pagination Algorithm --
+
+
+                // Send back another request to get players, this time according to our paginated logic rules
+                // GET api/playerdata/getplayerspage/{startindex}/{perpage}
+                url = "playerdata/getplayerspage/" + StartIndex + "/" + PerPage;
+                response = client.GetAsync(url).Result;
+
+                // Retrieve the response of the HTTP Request
+                IEnumerable<PlayerDto> SelectedPlayersPage = response.Content.ReadAsAsync<IEnumerable<PlayerDto>>().Result;
+
+                //Return the paginated of players instead of the entire list
+                return View(SelectedPlayersPage);
+
             }
             else
             {
+                // If we reach here something went wrong with our list algorithm
                 return RedirectToAction("Error");
             }
+
+            
         }
 
         // GET: Player/Details/5
@@ -159,25 +206,29 @@ namespace varsity_w_auth.Controllers
         [ValidateAntiForgeryToken()]
         public ActionResult Edit(int id, Player PlayerInfo, HttpPostedFileBase PlayerPic)
         {
-            Debug.WriteLine(PlayerInfo.PlayerFirstName);
+            //Debug.WriteLine(PlayerInfo.PlayerFirstName);
             string url = "playerdata/updateplayer/"+id;
             Debug.WriteLine(jss.Serialize(PlayerInfo));
             HttpContent content = new StringContent(jss.Serialize(PlayerInfo));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             HttpResponseMessage response = client.PostAsync(url, content).Result;
-            Debug.WriteLine(response.StatusCode);
+            //Debug.WriteLine(response.StatusCode);
             if (response.IsSuccessStatusCode)
             {
-
-                //Send over image data for player
-                url = "playerdata/updateplayerpic/"+id;
-                Debug.WriteLine("Received player picture "+PlayerPic.FileName);
-
-                MultipartFormDataContent requestcontent = new MultipartFormDataContent();
-                HttpContent imagecontent = new StreamContent(PlayerPic.InputStream);
-                requestcontent.Add(imagecontent,"PlayerPic",PlayerPic.FileName);
-                response = client.PostAsync(url, requestcontent).Result;
                 
+                //only attempt to send player picture data if we have it
+                if (PlayerPic != null) {
+                    Debug.WriteLine("Calling Update Image method.");
+                    //Send over image data for player
+                    url = "playerdata/updateplayerpic/"+id;
+                    //Debug.WriteLine("Received player picture "+PlayerPic.FileName);
+
+                    MultipartFormDataContent requestcontent = new MultipartFormDataContent();
+                    HttpContent imagecontent = new StreamContent(PlayerPic.InputStream);
+                    requestcontent.Add(imagecontent,"PlayerPic",PlayerPic.FileName);
+                    response = client.PostAsync(url, requestcontent).Result;
+                }
+
                 return RedirectToAction("Details", new { id = id });
             }
             else
