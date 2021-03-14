@@ -36,6 +36,8 @@ namespace varsity_w_auth.Models
         public DbSet<Team> Teams { get; set; }
         public DbSet<Sponsor> Sponsors { get; set; }
 
+        public DbSet<Sport> Sports { get; set; }
+
 
         //To Run the database, use code-first migrations
         //https://www.entityframeworktutorial.net/code-first/code-based-migration-in-code-first.aspx

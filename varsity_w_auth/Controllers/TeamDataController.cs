@@ -56,7 +56,7 @@ namespace varsity_w_auth.Controllers
 
 
         /// <summary>
-        /// Gets a list of players in the database alongside a status code (200 OK).
+        /// Gets a list of players in the database that match a particular team alongside a status code (200 OK).
         /// </summary>
         /// <param name="id">The input teamid</param>
         /// <returns>A list of players associated with the team</returns>
@@ -66,8 +66,14 @@ namespace varsity_w_auth.Controllers
         [ResponseType(typeof(IEnumerable<PlayerDto>))]
         public IHttpActionResult GetPlayersForTeam(int id)
         {
-            List<Player> Players = db.Players.Where(p => p.TeamID==id)
+            //IN SQL 
+            //WHERE players.teamid = {id}
+            List<Player> Players = db
+                .Players
+                .Where(p => p.TeamID==id)
                 .ToList();
+
+
             List<PlayerDto> PlayerDtos = new List<PlayerDto> { };
 
             //Here you can choose which information is exposed to the API
@@ -88,18 +94,20 @@ namespace varsity_w_auth.Controllers
         }
 
         /// <summary>
-        /// Gets a list or Sponsors in the database alongside a status code (200 OK).
+        /// Gets a list or Sponsors in the database corresponding to a particular team alongside a status code (200 OK).
         /// </summary>
         /// <param name="id">The input teamid</param>
         /// <returns>A list of Sponsors including their ID, name, and URL.</returns>
         /// <example>
-        /// GET: api/SponsorData/GetSponsorsForTeam
+        /// GET: api/SponsorData/GetSponsorsForTeam/3
         /// </example>
         [ResponseType(typeof(IEnumerable<SponsorDto>))]
         public IHttpActionResult GetSponsorsForTeam(int id)
         {
-            List<Sponsor> Sponsors = db.Sponsors
-                .Where(s => s.Teams.Any(t => t.TeamID == id))
+            List<Sponsor> Sponsors = db
+                .Sponsors
+                //s.Teams.Any(t => t.TeamID == id) returns TRUE OR FALSE
+                .Where(s => s.Teams.Any(t=> t.TeamID==id))
                 .ToList();
             List<SponsorDto> SponsorDtos = new List<SponsorDto> { };
 

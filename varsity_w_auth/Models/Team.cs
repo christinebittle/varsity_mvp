@@ -21,6 +21,11 @@ namespace varsity_w_auth.Models
 
         //A team can have many sponsors
         public ICollection<Sponsor> Sponsors { get; set; }
+
+        //A team is associated with one sport
+        [ForeignKey("Sport")]
+        public int? SportID { get; set; }
+        public virtual Sport Sport { get; set; }
     }
 
     public class TeamDto

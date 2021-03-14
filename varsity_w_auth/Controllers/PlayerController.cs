@@ -63,7 +63,7 @@ namespace varsity_w_auth.Controllers
                 // Find the total number of players
                 int PlayerCount = SelectedPlayers.Count();
                 // Number of players to display per page
-                int PerPage = 4;
+                int PerPage = 8;
                 // Determines the maximum number of pages (rounded up), assuming a page 0 start.
                 int MaxPage = (int)Math.Ceiling((decimal)PlayerCount / PerPage) - 1;
 

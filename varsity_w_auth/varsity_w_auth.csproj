@@ -208,7 +208,20 @@
     <Compile Include="Migrations\202102152050444_player_picextension.Designer.cs">
       <DependentUpon>202102152050444_player_picextension.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103041957299_sports.cs" />
+    <Compile Include="Migrations\202103041957299_sports.Designer.cs">
+      <DependentUpon>202103041957299_sports.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103041958592_sports2.cs" />
+    <Compile Include="Migrations\202103041958592_sports2.Designer.cs">
+      <DependentUpon>202103041958592_sports2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202103042005184_sport_team.cs" />
+    <Compile Include="Migrations\202103042005184_sport_team.Designer.cs">
+      <DependentUpon>202103042005184_sport_team.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Sport.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ViewModels\ManageViewModels.cs" />
@@ -344,6 +357,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202102152050444_player_picextension.resx">
       <DependentUpon>202102152050444_player_picextension.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103041957299_sports.resx">
+      <DependentUpon>202103041957299_sports.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103041958592_sports2.resx">
+      <DependentUpon>202103041958592_sports2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103042005184_sport_team.resx">
+      <DependentUpon>202103042005184_sport_team.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

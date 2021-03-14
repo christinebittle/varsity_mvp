@@ -68,10 +68,10 @@ namespace varsity_w_auth.Controllers
         /// <param name="StartIndex">The number of records to skip through</param>
         /// <param name="PerPage">The number of records for each page</param>
         /// <example>
-        /// GET: api/PlayerData/GetPlayers/20/5
+        /// GET: api/PlayerData/GetPlayersPage/20/5
         /// Retrieves the first 5 players after skipping 20 (fifth page)
         /// 
-        /// GET: api/PlayerData/GetPlayers/15/3
+        /// GET: api/PlayerData/GetPlayersPage/15/3
         /// Retrieves the first 3 players after skipping 15 (sixth page)
         /// 
         /// </example>
