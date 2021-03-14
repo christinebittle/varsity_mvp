@@ -220,6 +220,10 @@
     <Compile Include="Migrations\202103042005184_sport_team.Designer.cs">
       <DependentUpon>202103042005184_sport_team.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103141759368_christine-migration-sponsorlevel.cs" />
+    <Compile Include="Migrations\202103141759368_christine-migration-sponsorlevel.Designer.cs">
+      <DependentUpon>202103141759368_christine-migration-sponsorlevel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Sport.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
@@ -366,6 +370,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103042005184_sport_team.resx">
       <DependentUpon>202103042005184_sport_team.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103141759368_christine-migration-sponsorlevel.resx">
+      <DependentUpon>202103141759368_christine-migration-sponsorlevel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

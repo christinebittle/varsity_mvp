@@ -15,6 +15,9 @@ namespace varsity_w_auth.Models
         public string SponsorName { get; set; }
         public string SponsorURL { get; set; }
 
+        //Gold, Silver, Platinum etc.
+        public int SponsorLevel { get; set; }
+
 
         //Utilizes the inverse property to specify the "Many"
         //https://www.entityframeworktutorial.net/code-first/inverseproperty-dataannotations-attribute-in-code-first.aspx
