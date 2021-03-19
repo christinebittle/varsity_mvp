@@ -37,6 +37,7 @@ namespace varsity_w_auth.Controllers
         /// </example>
         [ResponseType(typeof(IEnumerable<PlayerDto>))]
         [Route("api/playerdata/getplayers")]
+        [Authorize]
         public IHttpActionResult GetPlayers()
         {
             List<Player> Players = db.Players.ToList();

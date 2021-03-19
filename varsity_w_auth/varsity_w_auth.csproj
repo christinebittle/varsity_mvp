@@ -187,6 +187,7 @@
     <Compile Include="Controllers\PlayerDataController.cs" />
     <Compile Include="Controllers\SponsorController.cs" />
     <Compile Include="Controllers\SponsorDataController.cs" />
+    <Compile Include="Controllers\SupportDataController.cs" />
     <Compile Include="Controllers\TeamController.cs" />
     <Compile Include="Controllers\TeamDataController.cs" />
     <Compile Include="Global.asax.cs">
@@ -224,8 +225,13 @@
     <Compile Include="Migrations\202103141759368_christine-migration-sponsorlevel.Designer.cs">
       <DependentUpon>202103141759368_christine-migration-sponsorlevel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103190551550_support_messages.cs" />
+    <Compile Include="Migrations\202103190551550_support_messages.Designer.cs">
+      <DependentUpon>202103190551550_support_messages.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Sport.cs" />
+    <Compile Include="Models\Support.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ViewModels\ManageViewModels.cs" />
@@ -373,6 +379,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202103141759368_christine-migration-sponsorlevel.resx">
       <DependentUpon>202103141759368_christine-migration-sponsorlevel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103190551550_support_messages.resx">
+      <DependentUpon>202103190551550_support_messages.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

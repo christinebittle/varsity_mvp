@@ -88,6 +88,12 @@ namespace varsity_w_auth.Controllers
                 IEnumerable<SponsorDto> SelectedSponsors = response.Content.ReadAsAsync<IEnumerable<SponsorDto>>().Result;
                 ViewModel.teamsponsors = SelectedSponsors;
 
+                //Grab the messages of support for this team
+                url = "supportdata/getsupportsforteam/" + id;
+                response = client.GetAsync(url).Result;
+                IEnumerable<SupportDto> SupportMessages = response.Content.ReadAsAsync<IEnumerable<SupportDto>>().Result;
+                ViewModel.supportmessages = SupportMessages;
+
                 return View(ViewModel);
             }
             else

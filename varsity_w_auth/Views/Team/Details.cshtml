@@ -6,9 +6,13 @@
 
 <h4>Team @Model.team.TeamName</h4>
 <div style="overflow:hidden;">
-    <div style="float:left; marign-right:2%; width:49%;">
+    <div style="float:left; margin-right:2%; width:49%;">
       
-        <div>@Html.ActionLink("Delete", "DeleteConfirm", new { id = Model.team.TeamID })</div>
+        <div>
+            @Html.ActionLink("Delete", "DeleteConfirm", new { id = Model.team.TeamID })
+            @Html.ActionLink("Edit", "Edit", new { id = Model.team.TeamID })
+            @Html.ActionLink("Back to List", "List")
+        </div>
 
         <dl class="dl-horizontal">
             <dt>
@@ -65,7 +69,14 @@
     </div>
     <div style="clear:both;"></div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.team.TeamID }) |
-    @Html.ActionLink("Back to List", "List")
-</p>
+<div>
+    <h3>Messages Of Support</h3>
+    @foreach (var support in Model.supportmessages) { 
+    
+        <div>
+            written by @support.UserName on @support.DSupportDate <br />
+            @support.SupportMessage
+        </div>
+    }
+</div>
+

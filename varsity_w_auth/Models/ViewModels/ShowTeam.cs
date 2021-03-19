@@ -16,6 +16,9 @@ namespace varsity_w_auth.Models.ViewModels
         //Information about all sponsors for that team
         public IEnumerable<SponsorDto> teamsponsors { get; set; }
 
+        //Information about all support messages for that team
+        public IEnumerable<SupportDto> supportmessages { get; set; }
+
         //Information about the sport associated with the team
         public Sport sport { get; set; }
 
