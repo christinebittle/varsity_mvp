@@ -1,5 +1,14 @@
-# Varsity Project MVP
-This example demonstrates a full MVP functionality for Create, Read, Update, and Delete. The relationships can also be modified through the web interface.
+# Varsity Project
+A work in progress project for a system represents a fan site for Varsity Sports.
+
+## Features In Progress
+- Sport Create, Read, Update, Delete
+- Sport and Team Relationships
+- Support Create, Read, Update, Delete
+- Support and Team Relationships
+- Admin Functionality
+- Restricting Access to Non-Registered Users
+- Semi-restricted Access to Support Messages (can only delete their own messages)
 
 ![Listing Players](https://github.com/christinebittle/varsity_mvp/blob/master/varsity_w_auth/assets/listplayers.png)
 
