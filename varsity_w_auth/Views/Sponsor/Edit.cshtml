@@ -44,7 +44,7 @@
                 <h4>Teams Sponsored:</h4>
                 <div>
                     @foreach (var team in Model.sponsoredteams)
-                    {
+                    { //Use HTML inspector to check the generated HTML from the razor syntax!
                         <div>
                             @Html.ActionLink(
                             team.TeamName,

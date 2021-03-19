@@ -37,7 +37,6 @@ namespace varsity_w_auth.Controllers
         /// </example>
         [ResponseType(typeof(IEnumerable<PlayerDto>))]
         [Route("api/playerdata/getplayers")]
-        [Authorize]
         public IHttpActionResult GetPlayers()
         {
             List<Player> Players = db.Players.ToList();
@@ -190,6 +189,7 @@ namespace varsity_w_auth.Controllers
         /// </example>
         [ResponseType(typeof(void))]
         [HttpPost]
+        [Authorize]
         public IHttpActionResult UpdatePlayer(int id, [FromBody] Player player)
         {
             
@@ -243,6 +243,7 @@ namespace varsity_w_auth.Controllers
         /// https://stackoverflow.com/questions/28369529/how-to-set-up-a-web-api-controller-for-multipart-form-data
 
         [HttpPost]
+        [Authorize]
         public IHttpActionResult UpdatePlayerPic(int id)
         {
 
@@ -317,6 +318,7 @@ namespace varsity_w_auth.Controllers
         /// </example>
         [ResponseType(typeof(Player))]
         [HttpPost]
+        [Authorize]
         public IHttpActionResult AddPlayer([FromBody] Player player)
         {
             //Will Validate according to data annotations specified on model
@@ -340,6 +342,7 @@ namespace varsity_w_auth.Controllers
         /// POST: api/PlayerData/DeletePlayer/5
         /// </example>
         [HttpPost]
+        [Authorize]
         public IHttpActionResult DeletePlayer(int id)
         {
             Player player = db.Players.Find(id);

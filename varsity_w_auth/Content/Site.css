@@ -63,6 +63,14 @@ footer{padding-top:50px;}
 }
 
 
+.navbar-inverse.admin {
+    background: #181818;
+}
+.navbar-inverse.admin .navbar-nav > li > a, .navbar-inverse.admin .navbar-brand {
+    color: #F6E71D;
+    font-weight: 400;
+}
+
 
 @media screen and (max-width:700px) {
     /*change to two column*/

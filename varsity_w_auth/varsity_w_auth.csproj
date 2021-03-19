@@ -338,6 +338,7 @@
     <Content Include="Views\Sponsor\Edit.cshtml" />
     <Content Include="Views\Sponsor\Error.cshtml" />
     <Content Include="Views\Sponsor\List.cshtml" />
+    <Content Include="Views\Shared\_AdminView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

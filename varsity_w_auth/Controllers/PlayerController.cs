@@ -21,8 +21,10 @@ namespace varsity_w_auth.Controllers
 
         private JavaScriptSerializer jss = new JavaScriptSerializer();
         private static readonly HttpClient client;
-        
-        
+
+        /// <summary>
+        /// This allows us to access a pre-defined C# HttpClient 'client' variable for sending POST and GET requests to the data access layer.
+        /// </summary>
         static PlayerController()
         {
             HttpClientHandler handler = new HttpClientHandler()
@@ -66,7 +68,7 @@ namespace varsity_w_auth.Controllers
         // If the page number is not included, set it to 0
         public ActionResult List(int PageNum=0)
         {
-            GetApplicationCookie();
+            
             // Grab all players
             string url = "playerdata/getplayers";
             // Send off an HTTP request
@@ -155,6 +157,8 @@ namespace varsity_w_auth.Controllers
         }
 
         // GET: Player/Create
+        // only administrators get to this page
+        [Authorize]
         public ActionResult Create()
         {
             UpdatePlayer ViewModel = new UpdatePlayer();
@@ -170,18 +174,21 @@ namespace varsity_w_auth.Controllers
         // POST: Player/Create
         [HttpPost]
         [ValidateAntiForgeryToken()]
+        [Authorize]
         public ActionResult Create(Player PlayerInfo)
         {
-            Debug.WriteLine(PlayerInfo.PlayerFirstName);
+            //pass along authentication credential in http request
+            GetApplicationCookie();
+
+            //Debug.WriteLine(PlayerInfo.PlayerFirstName);
+            //Debug.WriteLine(jss.Serialize(PlayerInfo));
             string url = "playerdata/addplayer";
-            Debug.WriteLine(jss.Serialize(PlayerInfo));
             HttpContent content = new StringContent(jss.Serialize(PlayerInfo));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             HttpResponseMessage response = client.PostAsync(url,content).Result;
 
             if (response.IsSuccessStatusCode)
             {
-                
                 int playerid = response.Content.ReadAsAsync<int>().Result;
                 return RedirectToAction("Details", new { id=playerid });
             }
@@ -189,11 +196,10 @@ namespace varsity_w_auth.Controllers
             {
                 return RedirectToAction("Error");
             }
-            
-            
         }
 
         // GET: Player/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
             UpdatePlayer ViewModel = new UpdatePlayer();
@@ -225,8 +231,12 @@ namespace varsity_w_auth.Controllers
         // POST: Player/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken()]
+        [Authorize]
         public ActionResult Edit(int id, Player PlayerInfo, HttpPostedFileBase PlayerPic)
         {
+            //pass along authentication credential in http request
+            GetApplicationCookie();
+
             //Debug.WriteLine(PlayerInfo.PlayerFirstName);
             string url = "playerdata/updateplayer/"+id;
             Debug.WriteLine(jss.Serialize(PlayerInfo));
@@ -260,6 +270,7 @@ namespace varsity_w_auth.Controllers
 
         // GET: Player/Delete/5
         [HttpGet]
+        [Authorize]
         public ActionResult DeleteConfirm(int id)
         {
             string url = "playerdata/findplayer/" + id;
@@ -281,8 +292,12 @@ namespace varsity_w_auth.Controllers
         // POST: Player/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken()]
+        [Authorize]
         public ActionResult Delete(int id)
         {
+            //pass along authentication credential in http request
+            GetApplicationCookie();
+
             string url = "playerdata/deleteplayer/" + id;
             //post body is empty
             HttpContent content = new StringContent("");

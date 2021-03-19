@@ -28,6 +28,9 @@ namespace varsity_w_auth.Controllers
         /// </summary>
         /// <param name="id">The input team id</param>
         /// <returns>A list of support messages for that team</returns>
+        /// <example>
+        /// GET api/SupportData/GetSupportsForTeam/2
+        /// </example>
         public IHttpActionResult GetSupportsForTeam(int id)
         {
             IEnumerable<Support> SupportMessages = db.Supports.Where(s=>s.TeamID == id);
@@ -53,6 +56,9 @@ namespace varsity_w_auth.Controllers
         /// </summary>
         /// <param name="id">The input UserID (string)</param>
         /// <returns>A list of support messages written by that user</returns>
+        /// <example>
+        /// GET api/SupportData/GetSupportsForUser/abcedf-12345-ghijkl
+        /// </example>
         public IHttpActionResult GetSupportsForUser(string id)
         {
             IEnumerable<Support> SupportMessages = db.Supports.Where(s => s.Id == id);
@@ -72,6 +78,49 @@ namespace varsity_w_auth.Controllers
             }
 
             return Ok(SupportMessageDtos);
+        }
+
+        /// <summary>
+        /// Adds a new support message to the database
+        /// </summary>
+        /// <param name="TeamSupportMessage">The message of support</param>
+        /// <returns>Status code of 200(ok) along with the newly inserted Support ID</returns>
+        /// <example>
+        /// POST api/SupportData/AddSupport
+        /// FORM DATA: JSON support object
+        /// </example>
+        [HttpPost]
+        public IHttpActionResult AddSupport(Support TeamSupportMessage)
+        {
+            //Will Validate according to data annotations specified on model
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            db.Supports.Add(TeamSupportMessage);
+            db.SaveChanges();
+
+            return Ok(TeamSupportMessage.SupportID);
+        }
+
+        /// <summary>
+        /// Removes a particular Message of Support.
+        /// </summary>
+        /// <param name="id">The supporting message to remove</param>
+        /// <returns>200 if successful. 404 if not successful.</returns>
+        [HttpPost]
+        public IHttpActionResult DeleteSupport(int id)
+        {
+            Support TeamSupportMessage = db.Supports.Find(id);
+            if (TeamSupportMessage == null)
+            {
+                return NotFound();
+            }
+
+            db.Supports.Remove(TeamSupportMessage);
+            db.SaveChanges();
+
+            return Ok();
         }
 
     }

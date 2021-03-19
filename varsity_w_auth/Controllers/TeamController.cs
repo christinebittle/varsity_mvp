@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Diagnostics;
 using System.Web.Script.Serialization;
+using Microsoft.AspNet.Identity;
 
 namespace varsity_w_auth.Controllers
 {
@@ -20,7 +21,9 @@ namespace varsity_w_auth.Controllers
         private JavaScriptSerializer jss = new JavaScriptSerializer();
         private static readonly HttpClient client;
 
-
+        /// <summary>
+        /// This allows us to access a pre-defined C# HttpClient 'client' variable for sending POST and GET requests to the data access layer.
+        /// </summary>
         static TeamController()
         {
             HttpClientHandler handler = new HttpClientHandler()
@@ -33,9 +36,29 @@ namespace varsity_w_auth.Controllers
             client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/json"));
 
+        }
 
-            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ACCESS_TOKEN);
 
+        /// <summary>
+        /// Grabs the authentication credentials which are sent to the Controller.
+        /// This is NOT considered a proper authentication technique for the WebAPI. It piggybacks the existing authentication set up in the template for Individual User Accounts. Considering the existing scope and complexity of the course, it works for now.
+        /// 
+        /// Here is a descriptive article which walks through the process of setting up authorization/authentication directly.
+        /// https://docs.microsoft.com/en-us/aspnet/web-api/overview/security/individual-accounts-in-web-api
+        /// </summary>
+        private void GetApplicationCookie()
+        {
+            string token = "";
+            if (!User.Identity.IsAuthenticated) { client.DefaultRequestHeaders.Remove("Cookie"); return; }
+            HttpCookie cookie = System.Web.HttpContext.Current.Request.Cookies.Get(".AspNet.ApplicationCookie");
+            if (cookie != null) token = cookie.Value;
+
+            //collect token as it is submitted to the controller
+            //use it to pass along to the WebAPI.
+            Debug.WriteLine("Token Submitted is : " + token);
+            if (token != "") client.DefaultRequestHeaders.Add("Cookie", ".AspNet.ApplicationCookie=" + token);
+
+            return;
         }
 
 
@@ -100,6 +123,54 @@ namespace varsity_w_auth.Controllers
             {
                 return RedirectToAction("Error");
             }
+        }
+
+        /// <summary>
+        /// Adds a Supporting Message to the Team. Add form in /Team/Details
+        /// </summary>
+        /// <param name="id">The Team ID</param>
+        /// <param name="message">The supporting message</param>
+        [HttpPost]
+        [Authorize]
+        public ActionResult AddSupport(int id, string message)
+        {
+
+            //create a model with the information that we need to send
+            Support TeamSupportMessage = new Support() {
+                SupportMessage = message,
+                SupportDate = DateTime.Now,
+                TeamID = id,
+                Id = User.Identity.GetUserId()
+            };
+            
+
+            Debug.WriteLine("Message of Support is "+TeamSupportMessage.SupportMessage);
+            Debug.WriteLine("Recipient Team ID is "+TeamSupportMessage.TeamID);
+            Debug.WriteLine("User ID submitting message is "+TeamSupportMessage.Id);
+
+            string url = "supportdata/addsupport";
+            //Debug.WriteLine(jss.Serialize(TeamSupportMessage));
+            HttpContent content = new StringContent(jss.Serialize(TeamSupportMessage));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            HttpResponseMessage response = client.PostAsync(url, content).Result;
+
+            return RedirectToAction("Details", new {id = id});
+        }
+
+        /// <summary>
+        /// Removes a Supporting Message from a Team.
+        /// </summary>
+        /// <param name="id">The Support Message ID</param>
+        [HttpGet]
+        [Route("Team/DeleteSupport/{supportid}/{teamid}")]
+        [Authorize]
+        public ActionResult DeleteSupport(int supportid, int teamid)
+        {
+            string url = "supportdata/deletesupport/"+supportid;
+            HttpContent content = new StringContent("");
+            HttpResponseMessage response = client.PostAsync(url,content).Result;
+            
+            return RedirectToAction("Details", new { id = teamid });
         }
 
         // GET: Team/Create

@@ -2,13 +2,14 @@
 
 @{
     ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_AdminView.cshtml";
 }
 
 <h2>Update</h2>
 
 @{ 
-    //The attribute enctype="multipart/form-data" is required
-    //if you are sending files as part of the HTTP POST request
+//The attribute enctype="multipart/form-data" is required
+//if you are sending files as part of the HTTP POST request
 }
 @using (Html.BeginForm("Edit","Player",new { id=Model.player.PlayerID},FormMethod.Post, new { enctype = "multipart/form-data" }))
 {

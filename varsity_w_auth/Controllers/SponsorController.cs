@@ -20,7 +20,9 @@ namespace varsity_w_auth.Controllers
         private JavaScriptSerializer jss = new JavaScriptSerializer();
         private static readonly HttpClient client;
 
-
+        /// <summary>
+        /// This allows us to access a pre-defined C# HttpClient 'client' variable for sending POST and GET requests to the data access layer.
+        /// </summary>
         static SponsorController()
         {
             HttpClientHandler handler = new HttpClientHandler()
@@ -38,7 +40,27 @@ namespace varsity_w_auth.Controllers
 
         }
 
+        /// <summary>
+        /// Grabs the authentication credentials which are sent to the Controller.
+        /// This is NOT considered a proper authentication technique for the WebAPI. It piggybacks the existing authentication set up in the template for Individual User Accounts. Considering the existing scope and complexity of the course, it works for now.
+        /// 
+        /// Here is a descriptive article which walks through the process of setting up authorization/authentication directly.
+        /// https://docs.microsoft.com/en-us/aspnet/web-api/overview/security/individual-accounts-in-web-api
+        /// </summary>
+        private void GetApplicationCookie()
+        {
+            string token = "";
+            if (!User.Identity.IsAuthenticated) { client.DefaultRequestHeaders.Remove("Cookie"); return; }
+            HttpCookie cookie = System.Web.HttpContext.Current.Request.Cookies.Get(".AspNet.ApplicationCookie");
+            if (cookie != null) token = cookie.Value;
 
+            //collect token as it is submitted to the controller
+            //use it to pass along to the WebAPI.
+            Debug.WriteLine("Token Submitted is : " + token);
+            if (token != "") client.DefaultRequestHeaders.Add("Cookie", ".AspNet.ApplicationCookie=" + token);
+
+            return;
+        }
 
         // GET: Sponsor/List
         public ActionResult List()
@@ -161,7 +183,11 @@ namespace varsity_w_auth.Controllers
             }
         }
 
-        // GET: Sponsor/Unsponsor/teamid/sponsorid
+        /// <summary>
+        /// This method collects the required information to remove an association between a team and a sponsor.
+        /// </summary>
+        /// <param name="teamid">The team to be unassociated with the sponsor</param>
+        /// <param name="sponsorid">The sponsor to be unassociated with the team</param>
         [HttpGet]
         [Route("Sponsor/Unsponsor/{teamid}/{sponsorid}")]
         public ActionResult Unsponsor(int teamid, int sponsorid)
@@ -180,10 +206,11 @@ namespace varsity_w_auth.Controllers
             }
         }
 
-        // POST: sponsor/sponsor
-        // First sponsor is the noun (the sponsor themselves)
-        // second sponsor is the verb (the act of sponsoring)
-        // The sponsor(1) sponsors(2) a team
+        /// <summary>
+        /// This method collects the required information to add an association between a team and a sponsor.
+        /// </summary>
+        /// <param name="teamid">The team to be sponsored</param>
+        /// <param name="sponsorid">The sponsor to sponsor the team.</param>
         [HttpPost]
         [Route("Sponsor/sponsor/{teamid}/{sponsorid}")]
         public ActionResult Sponsor(int teamid, int sponsorid)
