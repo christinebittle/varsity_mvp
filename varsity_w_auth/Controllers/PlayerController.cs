@@ -31,7 +31,7 @@ namespace varsity_w_auth.Controllers
             {
                 AllowAutoRedirect = false,
                 //cookies are manually set in RequestHeader
-                UseCookies = false,
+                UseCookies = false
             };
             
             client = new HttpClient(handler);
@@ -51,7 +51,12 @@ namespace varsity_w_auth.Controllers
         private void GetApplicationCookie()
         {
             string token = "";
-            if (!User.Identity.IsAuthenticated) {client.DefaultRequestHeaders.Remove("Cookie"); return; }
+            //HTTP client is set up to be reused, otherwise it will exhaust server resources.
+            //This is a bit dangerous because a previously authenticated cookie could be cached for
+            //a follow-up request from someone else. Reset cookies in HTTP client before grabbing a new one.
+            client.DefaultRequestHeaders.Remove("Cookie");
+            if (!User.Identity.IsAuthenticated) return;
+
             HttpCookie cookie = System.Web.HttpContext.Current.Request.Cookies.Get(".AspNet.ApplicationCookie");
             if (cookie != null) token = cookie.Value;
 
@@ -69,6 +74,10 @@ namespace varsity_w_auth.Controllers
         public ActionResult List(int PageNum=0)
         {
             
+            ListPlayers ViewModel = new ListPlayers();
+            ViewModel.isadmin = User.IsInRole("Admin");
+            
+
             // Grab all players
             string url = "playerdata/getplayers";
             // Send off an HTTP request
@@ -115,8 +124,10 @@ namespace varsity_w_auth.Controllers
                 // Retrieve the response of the HTTP Request
                 IEnumerable<PlayerDto> SelectedPlayersPage = response.Content.ReadAsAsync<IEnumerable<PlayerDto>>().Result;
 
+                ViewModel.players = SelectedPlayersPage;
+
                 //Return the paginated of players instead of the entire list
-                return View(SelectedPlayersPage);
+                return View(ViewModel);
 
             }
             else
@@ -131,7 +142,14 @@ namespace varsity_w_auth.Controllers
         // GET: Player/Details/5
         public ActionResult Details(int id)
         {
+            
             ShowPlayer ViewModel = new ShowPlayer();
+
+            //Pass along to the view information about who is logged in
+            ViewModel.isadmin = User.IsInRole("Admin");
+            
+
+
             string url = "playerdata/findplayer/" + id;
             HttpResponseMessage response = client.GetAsync(url).Result;
             //Can catch the status code (200 OK, 301 REDIRECT), etc.
@@ -158,7 +176,7 @@ namespace varsity_w_auth.Controllers
 
         // GET: Player/Create
         // only administrators get to this page
-        [Authorize]
+        [Authorize(Roles="Admin")]
         public ActionResult Create()
         {
             UpdatePlayer ViewModel = new UpdatePlayer();
@@ -174,7 +192,7 @@ namespace varsity_w_auth.Controllers
         // POST: Player/Create
         [HttpPost]
         [ValidateAntiForgeryToken()]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(Player PlayerInfo)
         {
             //pass along authentication credential in http request
@@ -199,7 +217,7 @@ namespace varsity_w_auth.Controllers
         }
 
         // GET: Player/Edit/5
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
             UpdatePlayer ViewModel = new UpdatePlayer();
@@ -231,7 +249,7 @@ namespace varsity_w_auth.Controllers
         // POST: Player/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken()]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id, Player PlayerInfo, HttpPostedFileBase PlayerPic)
         {
             //pass along authentication credential in http request
@@ -270,7 +288,7 @@ namespace varsity_w_auth.Controllers
 
         // GET: Player/Delete/5
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteConfirm(int id)
         {
             string url = "playerdata/findplayer/" + id;
@@ -292,7 +310,7 @@ namespace varsity_w_auth.Controllers
         // POST: Player/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken()]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
             //pass along authentication credential in http request

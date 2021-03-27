@@ -171,6 +171,7 @@ namespace varsity_w_auth.Controllers
         /// </example>
         [ResponseType(typeof(void))]
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IHttpActionResult UpdateTeam(int id, [FromBody] Team Team)
         {
             if (!ModelState.IsValid)
@@ -216,6 +217,7 @@ namespace varsity_w_auth.Controllers
         /// </example>
         [ResponseType(typeof(Team))]
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IHttpActionResult AddTeam([FromBody] Team Team)
         {
             //Will Validate according to data annotations specified on model
@@ -239,6 +241,7 @@ namespace varsity_w_auth.Controllers
         /// POST: api/TeamData/DeleteTeam/5
         /// </example>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IHttpActionResult DeleteTeam(int id)
         {
             Team Team = db.Teams.Find(id);

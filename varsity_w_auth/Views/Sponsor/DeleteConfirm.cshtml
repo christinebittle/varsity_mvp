@@ -2,11 +2,11 @@
 
 @{
     ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_AdminView.cshtml";
 }
 
-<h2>View</h2>
 
-<h3>Are you sure you want to delete this sponsor?</h3>
+<h4>Are you sure you want to delete this sponsor?</h4>
 <div>
     
     <dl class="dl-horizontal">
@@ -27,7 +27,7 @@
         
     </dl>
 
-    @using (Html.BeginForm("Delete", "Team", new { id=Model.SponsorID})) {
+    @using (Html.BeginForm("Delete", "Sponsor", new { id=Model.SponsorID})) {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">

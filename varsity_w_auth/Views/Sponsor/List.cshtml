@@ -1,26 +1,29 @@
-﻿@model IEnumerable<varsity_w_auth.Models.SponsorDto>
+﻿@model varsity_w_auth.Models.ViewModels.ListSponsors
 
 @{
     ViewBag.Title = "View";
 }
 
 <h2>View</h2>
-
+@if (Model.isadmin)
+{
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+}
+
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.SponsorName)
+            Sponsor Name
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.SponsorURL)
+            Sponsor Link
         </th>
-        <th></th>
+        <th>Action</th>
     </tr>
 
-@foreach (var item in Model) {
+@foreach (var item in Model.sponsors) {
     <tr>
         
         <td>
@@ -31,7 +34,9 @@
             @Html.DisplayFor(modelItem => item.SponsorURL)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.SponsorID }) |
+            @if (Model.isadmin) { 
+            <span style="margin-right:5px;"> @Html.ActionLink("Edit", "Edit", new { id = item.SponsorID })</span>
+            }
             @Html.ActionLink("Details", "Details", new { id=item.SponsorID })
             
         </td>

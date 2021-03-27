@@ -7,6 +7,11 @@ namespace varsity_w_auth.Models.ViewModels
 {
     public class UpdateSponsor
     {
+        //this is also used for showsponsor
+
+        //conditional rendering for update/delete links depending on if the user is logged in
+        public bool isadmin { get; set; }
+
         //base information about the sponsor
         public SponsorDto sponsor { get; set; }
         //display all teams that this sponsor is sponsoring

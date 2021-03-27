@@ -27,7 +27,8 @@ namespace varsity_w_auth.Controllers
         {
             HttpClientHandler handler = new HttpClientHandler()
             {
-                AllowAutoRedirect = false
+                AllowAutoRedirect = false,
+                UseCookies = false
             };
             client = new HttpClient(handler);
             //change this to match your own local port number
@@ -50,7 +51,13 @@ namespace varsity_w_auth.Controllers
         private void GetApplicationCookie()
         {
             string token = "";
-            if (!User.Identity.IsAuthenticated) { client.DefaultRequestHeaders.Remove("Cookie"); return; }
+
+            //HTTP client is set up to be reused, otherwise it will exhaust server resources.
+            //This is a bit dangerous because a previously authenticated cookie could be cached for
+            //a follow-up request from someone else. Reset cookies in HTTP client before grabbing a new one.
+            client.DefaultRequestHeaders.Remove("Cookie");
+            if (!User.Identity.IsAuthenticated) return;
+
             HttpCookie cookie = System.Web.HttpContext.Current.Request.Cookies.Get(".AspNet.ApplicationCookie");
             if (cookie != null) token = cookie.Value;
 
@@ -65,12 +72,16 @@ namespace varsity_w_auth.Controllers
         // GET: Sponsor/List
         public ActionResult List()
         {
+            ListSponsors ViewModel = new ListSponsors();
+            ViewModel.isadmin = User.IsInRole("Admin");
+
             string url = "sponsordata/getsponsors";
             HttpResponseMessage response = client.GetAsync(url).Result;
             if (response.IsSuccessStatusCode)
             {
                 IEnumerable<SponsorDto> SelectedSponsors = response.Content.ReadAsAsync<IEnumerable<SponsorDto>>().Result;
-                return View(SelectedSponsors);
+                ViewModel.sponsors = SelectedSponsors;
+                return View(ViewModel);
             }
             else
             {
@@ -82,6 +93,8 @@ namespace varsity_w_auth.Controllers
         public ActionResult Details(int id)
         {
             UpdateSponsor ViewModel = new UpdateSponsor();
+            ViewModel.isadmin = User.IsInRole("Admin");
+
 
             string url = "sponsordata/findsponsor/" + id;
             HttpResponseMessage response = client.GetAsync(url).Result;
@@ -112,6 +125,7 @@ namespace varsity_w_auth.Controllers
         }
 
         // GET: Sponsor/Create
+        [Authorize(Roles="Admin")]
         public ActionResult Create()
         {
             return View();
@@ -120,8 +134,12 @@ namespace varsity_w_auth.Controllers
         // POST: Sponsor/Create
         [HttpPost]
         [ValidateAntiForgeryToken()]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(Sponsor SponsorInfo)
         {
+            //pass along credentials to api
+            GetApplicationCookie();
+
             Debug.WriteLine(SponsorInfo.SponsorName);
             string url = "sponsordata/addsponsor";
             Debug.WriteLine(jss.Serialize(SponsorInfo));
@@ -144,8 +162,10 @@ namespace varsity_w_auth.Controllers
         }
 
         // GET: Sponsor/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
+
             UpdateSponsor ViewModel = new UpdateSponsor();
 
             string url = "sponsordata/findsponsor/" + id;
@@ -190,8 +210,12 @@ namespace varsity_w_auth.Controllers
         /// <param name="sponsorid">The sponsor to be unassociated with the team</param>
         [HttpGet]
         [Route("Sponsor/Unsponsor/{teamid}/{sponsorid}")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Unsponsor(int teamid, int sponsorid)
         {
+            //pass along credentials to api
+            GetApplicationCookie();
+
             string url = "sponsordata/unsponsor/" + teamid + "/" + sponsorid;
             HttpResponseMessage response = client.GetAsync(url).Result;
             //Can catch the status code (200 OK, 301 REDIRECT), etc.
@@ -213,8 +237,12 @@ namespace varsity_w_auth.Controllers
         /// <param name="sponsorid">The sponsor to sponsor the team.</param>
         [HttpPost]
         [Route("Sponsor/sponsor/{teamid}/{sponsorid}")]
+        [Authorize(Roles = "Admin")]
         public ActionResult Sponsor(int teamid, int sponsorid)
         {
+            //pass along credentials to api
+            GetApplicationCookie();
+
             string url = "sponsordata/sponsor/" + teamid + "/" + sponsorid;
             HttpResponseMessage response = client.GetAsync(url).Result;
             //Can catch the status code (200 OK, 301 REDIRECT), etc.
@@ -232,8 +260,12 @@ namespace varsity_w_auth.Controllers
         // POST: Sponsor/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken()]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id, Sponsor SponsorInfo)
         {
+            //pass along credentials to api
+            GetApplicationCookie();
+
             Debug.WriteLine(SponsorInfo.SponsorName);
             string url = "sponsordata/updatesponsor/" + id;
             Debug.WriteLine(jss.Serialize(SponsorInfo));
@@ -256,6 +288,7 @@ namespace varsity_w_auth.Controllers
 
         // GET: Sponsor/Delete/5
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteConfirm(int id)
         {
             string url = "sponsordata/findsponsor/" + id;
@@ -277,8 +310,12 @@ namespace varsity_w_auth.Controllers
         // POST: Sponsor/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken()]
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
+            //pass along credentials to api
+            GetApplicationCookie();
+
             string url = "sponsordata/deletesponsor/" + id;
             //post body is empty
             HttpContent content = new StringContent("");

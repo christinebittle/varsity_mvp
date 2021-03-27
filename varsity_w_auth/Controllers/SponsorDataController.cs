@@ -165,6 +165,7 @@ namespace varsity_w_auth.Controllers
         /// </example>
         [ResponseType(typeof(void))]
         [HttpPost]
+        [Authorize(Roles ="Admin")]
         public IHttpActionResult UpdateSponsor(int id, [FromBody] Sponsor Sponsor)
         {
             if (!ModelState.IsValid)
@@ -210,6 +211,7 @@ namespace varsity_w_auth.Controllers
         /// </example>
         [ResponseType(typeof(Sponsor))]
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IHttpActionResult AddSponsor([FromBody] Sponsor Sponsor)
         {
             //Will Validate according to data annotations specified on model
@@ -233,6 +235,7 @@ namespace varsity_w_auth.Controllers
         /// POST: api/Sponsors/DeleteSponsor/5
         /// </example>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IHttpActionResult DeleteSponsor(int id)
         {
             Sponsor Sponsor = db.Sponsors.Find(id);
@@ -255,6 +258,7 @@ namespace varsity_w_auth.Controllers
         /// <returns>status code of 200 OK</returns>
         [HttpGet]
         [Route("api/sponsordata/unsponsor/{teamid}/{sponsorid}")]
+        [Authorize(Roles = "Admin")]
         public IHttpActionResult Unsponsor(int teamid, int sponsorid)
         {
             //First select the sponsor (also loading in team data)
@@ -291,6 +295,7 @@ namespace varsity_w_auth.Controllers
         /// <returns>status code of 200 OK</returns>
         [HttpGet]
         [Route("api/sponsordata/sponsor/{teamid}/{sponsorid}")]
+        [Authorize(Roles = "Admin")]
         public IHttpActionResult Sponsor(int teamid, int sponsorid)
         {
             //First select the sponsor (also loading in team data)

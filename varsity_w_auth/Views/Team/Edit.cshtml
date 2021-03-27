@@ -2,16 +2,16 @@
 
 @{
     ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_AdminView.cshtml";
 }
 
-<h2>Update</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>Team</h4>
+        <h4>Update Team @Model.TeamName</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.TeamID)

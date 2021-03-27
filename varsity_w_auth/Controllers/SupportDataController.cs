@@ -12,6 +12,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using varsity_w_auth.Models;
 using System.Diagnostics;
+using Microsoft.AspNet.Identity;
 
 namespace varsity_w_auth.Controllers
 {
@@ -22,6 +23,8 @@ namespace varsity_w_auth.Controllers
 
         //Why doesn't this class have a 'SupportController'?
         //The data access layer is the critical element. Records can be added/removed on the Team Details View.
+        
+        
 
         /// <summary>
         /// Returns a list of Support Messages for a given team.
@@ -43,7 +46,8 @@ namespace varsity_w_auth.Controllers
                     SupportMessage = Message.SupportMessage,
                     SupportDate = Message.SupportDate,
                     DSupportDate = Message.SupportDate.ToString("MMM d yyyy"),
-                    UserName = Message.ApplicationUser.UserName
+                    UserName = Message.ApplicationUser.UserName,
+                    Id = Message.Id
                 };
                 SupportMessageDtos.Add(MessageDto);
             }
@@ -72,7 +76,8 @@ namespace varsity_w_auth.Controllers
                     SupportMessage = Message.SupportMessage,
                     SupportDate = Message.SupportDate,
                     DSupportDate = Message.SupportDate.ToString("MMM d yyyy"),
-                    UserName = Message.ApplicationUser.UserName
+                    UserName = Message.ApplicationUser.UserName,
+                    Id = Message.Id
                 };
                 SupportMessageDtos.Add(MessageDto);
             }
@@ -90,6 +95,8 @@ namespace varsity_w_auth.Controllers
         /// FORM DATA: JSON support object
         /// </example>
         [HttpPost]
+        //both admin and fan roles are allowed to add support
+        [Authorize(Roles="Admin,Fan")]
         public IHttpActionResult AddSupport(Support TeamSupportMessage)
         {
             //Will Validate according to data annotations specified on model
@@ -109,12 +116,22 @@ namespace varsity_w_auth.Controllers
         /// <param name="id">The supporting message to remove</param>
         /// <returns>200 if successful. 404 if not successful.</returns>
         [HttpPost]
+        [Authorize(Roles="Admin,Fan")]
         public IHttpActionResult DeleteSupport(int id)
         {
+            
+
             Support TeamSupportMessage = db.Supports.Find(id);
             if (TeamSupportMessage == null)
             {
                 return NotFound();
+            }
+
+            //An admin can delete any message of support.
+            //A fan can only delete a message of support if their ID matches the record.
+            if (!User.IsInRole("Admin"))
+            {
+                if (User.Identity.GetUserId() != TeamSupportMessage.Id) return Unauthorized();
             }
 
             db.Supports.Remove(TeamSupportMessage);

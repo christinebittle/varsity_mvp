@@ -71,6 +71,35 @@ footer{padding-top:50px;}
     font-weight: 400;
 }
 
+.editnav ul{
+    list-style-type:none;
+    padding-left:0;
+}
+.editnav li{
+    display:inline-block;
+    margin-right:20px;
+}
+
+.sublist{
+    padding:10px 0;
+    max-width:200px;
+}
+
+.sublist .listitem{
+    border-bottom:1px solid #dedede;
+    padding:2px 0;
+}
+
+.supportmessage {
+    -webkit-box-shadow: 2px 2px 6px 1px #C3C3C3;
+    box-shadow: 2px 2px 6px 1px #C3C3C3;
+    padding:15px 20px;
+    margin-bottom:20px;
+    max-width:300px;
+}
+
+textarea{max-width:300px; width:100%;}
+
 
 @media screen and (max-width:700px) {
     /*change to two column*/

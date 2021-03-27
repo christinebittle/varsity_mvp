@@ -7,7 +7,16 @@
 <h4>Player</h4>
 
 <div>
-    <div>@Html.ActionLink("Delete", "DeleteConfirm", new { id = Model.player.PlayerID })</div>
+    <nav class="editnav">
+        <ul>
+            <li>@Html.ActionLink("Back to List", "List")</li>
+            @if (Model.isadmin) { 
+            <li>@Html.ActionLink("Delete", "DeleteConfirm", new { id = Model.player.PlayerID })</li>
+            <li>@Html.ActionLink("Edit", "Edit", new { id = Model.player.PlayerID })</li>
+            }
+        </ul>
+        
+    </nav>
     <hr />
     @{
         //Use server rendering to determine an image
@@ -56,7 +65,4 @@
 
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.player.PlayerID }) |
-    @Html.ActionLink("Back to List", "List")
-</p>
+

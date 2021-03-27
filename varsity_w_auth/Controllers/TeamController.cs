@@ -28,7 +28,9 @@ namespace varsity_w_auth.Controllers
         {
             HttpClientHandler handler = new HttpClientHandler()
             {
-                AllowAutoRedirect = false
+                AllowAutoRedirect = false,
+                //cookies are manually set in RequestHeader
+                UseCookies = false
             };
             client = new HttpClient(handler);
             //change this to match your own local port number
@@ -49,7 +51,11 @@ namespace varsity_w_auth.Controllers
         private void GetApplicationCookie()
         {
             string token = "";
-            if (!User.Identity.IsAuthenticated) { client.DefaultRequestHeaders.Remove("Cookie"); return; }
+            //HTTP client is set up to be reused, otherwise it will exhaust server resources.
+            //This is a bit dangerous because a previously authenticated cookie could be cached for
+            //a follow-up request from someone else. Reset cookies in HTTP client before grabbing a new one.
+            client.DefaultRequestHeaders.Remove("Cookie");
+            if (!User.Identity.IsAuthenticated) return;
             HttpCookie cookie = System.Web.HttpContext.Current.Request.Cookies.Get(".AspNet.ApplicationCookie");
             if (cookie != null) token = cookie.Value;
 
@@ -66,12 +72,16 @@ namespace varsity_w_auth.Controllers
         // GET: Team/List
         public ActionResult List()
         {
+            ListTeams ViewModel = new ListTeams();
+            ViewModel.isadmin = User.IsInRole("Admin");
+
             string url = "teamdata/getteams";
             HttpResponseMessage response = client.GetAsync(url).Result;
             if (response.IsSuccessStatusCode)
             {
                 IEnumerable<TeamDto> SelectedTeams = response.Content.ReadAsAsync<IEnumerable<TeamDto>>().Result;
-                return View(SelectedTeams);
+                ViewModel.teams = SelectedTeams;
+                return View(ViewModel);
             }
             else
             {
@@ -83,6 +93,10 @@ namespace varsity_w_auth.Controllers
         public ActionResult Details(int id)
         {
             ShowTeam ViewModel = new ShowTeam();
+            ViewModel.isadmin = User.IsInRole("Admin");
+            ViewModel.isfan = User.IsInRole("Fan");
+            ViewModel.userid = User.Identity.GetUserId();
+
             string url = "teamdata/findteam/" + id;
             HttpResponseMessage response = client.GetAsync(url).Result;
             //Can catch the status code (200 OK, 301 REDIRECT), etc.
@@ -131,9 +145,11 @@ namespace varsity_w_auth.Controllers
         /// <param name="id">The Team ID</param>
         /// <param name="message">The supporting message</param>
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles="Admin,Fan")]
         public ActionResult AddSupport(int id, string message)
         {
+            //pass authorization up to the data access layer
+            GetApplicationCookie();
 
             //create a model with the information that we need to send
             Support TeamSupportMessage = new Support() {
@@ -149,7 +165,7 @@ namespace varsity_w_auth.Controllers
             Debug.WriteLine("User ID submitting message is "+TeamSupportMessage.Id);
 
             string url = "supportdata/addsupport";
-            //Debug.WriteLine(jss.Serialize(TeamSupportMessage));
+            Debug.WriteLine(jss.Serialize(TeamSupportMessage));
             HttpContent content = new StringContent(jss.Serialize(TeamSupportMessage));
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             HttpResponseMessage response = client.PostAsync(url, content).Result;
@@ -163,9 +179,11 @@ namespace varsity_w_auth.Controllers
         /// <param name="id">The Support Message ID</param>
         [HttpGet]
         [Route("Team/DeleteSupport/{supportid}/{teamid}")]
-        [Authorize]
+        [Authorize(Roles="Admin,Fan")]
         public ActionResult DeleteSupport(int supportid, int teamid)
         {
+            GetApplicationCookie();
+
             string url = "supportdata/deletesupport/"+supportid;
             HttpContent content = new StringContent("");
             HttpResponseMessage response = client.PostAsync(url,content).Result;
@@ -174,6 +192,7 @@ namespace varsity_w_auth.Controllers
         }
 
         // GET: Team/Create
+        [Authorize(Roles="Admin")]
         public ActionResult Create()
         {
             return View();
@@ -182,8 +201,11 @@ namespace varsity_w_auth.Controllers
         // POST: Team/Create
         [HttpPost]
         [ValidateAntiForgeryToken()]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(Team TeamInfo)
         {
+            GetApplicationCookie();
+
             Debug.WriteLine(TeamInfo.TeamName);
             string url = "Teamdata/addTeam";
             Debug.WriteLine(jss.Serialize(TeamInfo));
@@ -206,6 +228,7 @@ namespace varsity_w_auth.Controllers
         }
 
         // GET: Team/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
             string url = "teamdata/findteam/" + id;
@@ -227,8 +250,11 @@ namespace varsity_w_auth.Controllers
         // POST: Team/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken()]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id, Team TeamInfo)
         {
+            GetApplicationCookie();
+
             Debug.WriteLine(TeamInfo.TeamName);
             string url = "teamdata/updateteam/"+id;
             Debug.WriteLine(jss.Serialize(TeamInfo));
@@ -248,6 +274,7 @@ namespace varsity_w_auth.Controllers
 
         // GET: Team/Delete/5
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteConfirm(int id)
         {
             string url = "teamdata/findteam/" + id;
@@ -269,8 +296,10 @@ namespace varsity_w_auth.Controllers
         // POST: Team/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken()]
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
+            GetApplicationCookie();
             string url = "teamdata/deleteteam/" + id;
             //post body is empty
             HttpContent content = new StringContent("");

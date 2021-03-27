@@ -234,6 +234,9 @@
     <Compile Include="Models\Support.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ViewModels\ListPlayers.cs" />
+    <Compile Include="Models\ViewModels\ListSponsors.cs" />
+    <Compile Include="Models\ViewModels\ListTeams.cs" />
     <Compile Include="Models\ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\Sponsor.cs" />

@@ -14,6 +14,7 @@ namespace varsity_w_auth.Models
         //The messages of support sent by this logged in user.
         public ICollection<Support> SupportMessages { get; set; }
 
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
