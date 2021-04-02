@@ -3,9 +3,7 @@ A work in progress project for a system represents a fan site for Varsity Sports
 
 
 ## Features In Progress
-- Sport Create, Read, Update, Delete
-- Sport and Team Relationships
-- Support Create, Read, Update, Delete
+- Showing Support on Users View
 
 ## To Run This Project
 - Clone Codebase
