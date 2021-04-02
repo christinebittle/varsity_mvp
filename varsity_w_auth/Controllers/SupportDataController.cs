@@ -36,6 +36,8 @@ namespace varsity_w_auth.Controllers
         /// </example>
         public IHttpActionResult GetSupportsForTeam(int id)
         {
+            
+
             IEnumerable<Support> SupportMessages = db.Supports.Where(s=>s.TeamID == id);
             List<SupportDto> SupportMessageDtos = new List<SupportDto>() { };
 
@@ -119,7 +121,6 @@ namespace varsity_w_auth.Controllers
         [Authorize(Roles="Admin,Fan")]
         public IHttpActionResult DeleteSupport(int id)
         {
-            
 
             Support TeamSupportMessage = db.Supports.Find(id);
             if (TeamSupportMessage == null)

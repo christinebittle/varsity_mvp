@@ -107,6 +107,14 @@ namespace varsity_w_auth.Controllers
                 TeamDto SelectedTeam = response.Content.ReadAsAsync<TeamDto>().Result;
                 ViewModel.team = SelectedTeam;
 
+                //Grab the sport associated with this team
+                url = "TeamData/FindSportForTeam/" + id;
+                response = client.GetAsync(url).Result;
+                //Can catch the status code (200 OK, 301 REDIRECT), etc.
+                //Debug.WriteLine(response.StatusCode);
+                SportDto Sport = response.Content.ReadAsAsync<SportDto>().Result;
+                ViewModel.sport = Sport;
+
                 //We don't need to throw any errors if this is null
                 //A team not having any players is not an issue.
                 url = "teamdata/getplayersforteam/" + id;
@@ -195,7 +203,14 @@ namespace varsity_w_auth.Controllers
         [Authorize(Roles="Admin")]
         public ActionResult Create()
         {
-            return View();
+            UpdateTeam ViewModel = new UpdateTeam();
+            //get information about sports this team could be about.
+            string url = "sportdata/getsports";
+            HttpResponseMessage response = client.GetAsync(url).Result;
+            IEnumerable<SportDto> PotentialSports = response.Content.ReadAsAsync<IEnumerable<SportDto>>().Result;
+            ViewModel.sports = PotentialSports;
+
+            return View(ViewModel);
         }
 
         // POST: Team/Create
@@ -231,15 +246,26 @@ namespace varsity_w_auth.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
+            UpdateTeam ViewModel = new UpdateTeam();
             string url = "teamdata/findteam/" + id;
             HttpResponseMessage response = client.GetAsync(url).Result;
             //Can catch the status code (200 OK, 301 REDIRECT), etc.
             //Debug.WriteLine(response.StatusCode);
             if (response.IsSuccessStatusCode)
             {
-                //Put data into Team data transfer object
+
+                //Put data into Team object
                 TeamDto SelectedTeam = response.Content.ReadAsAsync<TeamDto>().Result;
-                return View(SelectedTeam);
+                ViewModel.team = SelectedTeam;
+
+                //get information about sports this team could be about.
+                url = "sportdata/getsports";
+                response = client.GetAsync(url).Result;
+                IEnumerable<SportDto> PotentialSports = response.Content.ReadAsAsync<IEnumerable<SportDto>>().Result;
+                ViewModel.sports = PotentialSports;
+
+
+                return View(ViewModel);
             }
             else
             {

@@ -18,29 +18,29 @@
             Team Name
         </th>
         <th>
-            Team Bio
+            Number of Players
         </th>
         <th >
             Action
         </th>
     </tr>
 
-@foreach (var item in Model.teams) {
+@foreach (var team in Model.teams) {
     <tr>
         
         <td>
-            @Html.DisplayFor(modelItem => item.TeamName)
+            @Html.DisplayFor(modelItem => team.TeamName)
         </td>
         
         <td>
-            @Html.DisplayFor(modelItem => item.TeamBio)
+            @team.NumPlayers
         </td>
         <td>
             @if (Model.isadmin)
             {
-            <span style="margin-right:5px;">@Html.ActionLink("Edit", "Edit", new { id = item.TeamID })</span>
+            <span style="margin-right:5px;">@Html.ActionLink("Edit", "Edit", new { id = team.TeamID })</span>
             }
-            @Html.ActionLink("Details", "Details", new { id=item.TeamID })
+            @Html.ActionLink("Details", "Details", new { id=team.TeamID })
             
         </td>
     </tr>

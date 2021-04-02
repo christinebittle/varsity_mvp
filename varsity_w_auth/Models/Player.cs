@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -19,6 +20,7 @@ namespace varsity_w_auth.Models
 
         public string PlayerLastName { get; set; }
 
+        [AllowHtml]
         public string PlayerBio { get; set; }
 
         public bool PlayerHasPic { get; set; }

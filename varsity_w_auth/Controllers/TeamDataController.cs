@@ -36,7 +36,7 @@ namespace varsity_w_auth.Controllers
         [ResponseType(typeof(IEnumerable<TeamDto>))]
         public IHttpActionResult GetTeams()
         {
-            List<Team> Teams = db.Teams.ToList();
+            List<Team> Teams = db.Teams.Include(t=>t.Players).ToList();
             List<TeamDto> TeamDtos = new List<TeamDto> { };
 
             //Here you can choose which information is exposed to the API
@@ -46,12 +46,43 @@ namespace varsity_w_auth.Controllers
                 {
                     TeamID = Team.TeamID,
                     TeamName = Team.TeamName,
-                    TeamBio = Team.TeamBio
+                    TeamBio = Team.TeamBio,
+                    NumPlayers = Team.Players.Count()
                 };
                 TeamDtos.Add(NewTeam);
             }
 
             return Ok(TeamDtos);
+        }
+
+        /// <summary>
+        /// Finds a particular sport associated with a team.
+        /// </summary>
+        /// <param name="id">The Team id</param>
+        /// <returns>Information about the sport that team plays</returns>
+        // <example>
+        // GET: api/TeamData/FindSportForTeam/5
+        // </example>
+        [HttpGet]
+        [ResponseType(typeof(TeamDto))]
+        public IHttpActionResult FindSportForTeam(int id)
+        {
+            //Find the data
+            Sport Sport = db.Sports.Where(s => s.Teams.Any(t => t.TeamID == id)).FirstOrDefault();
+            //if not found, return 404 status code.
+            if (Sport == null)
+            {
+                return NotFound();
+            }
+
+            //put into a 'friendly object format'
+            SportDto SportDto = new SportDto
+            {
+                SportID = Sport.SportID,
+                SportName = Sport.SportName
+            };
+            //pass along data as 200 status code OK response
+            return Ok(SportDto);
         }
 
 

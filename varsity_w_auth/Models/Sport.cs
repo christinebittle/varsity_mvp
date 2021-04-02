@@ -15,7 +15,15 @@ namespace varsity_w_auth.Models
         public int SportID { get; set; }
         public string SportName { get; set; }
 
-        
+        //A sport can have many teams
+        public ICollection<Team> Teams { get; set; }
+
+    }
+
+    public class SportDto
+    {
+        public int SportID { get; set; }
+        public string SportName { get; set; }
 
     }
 }

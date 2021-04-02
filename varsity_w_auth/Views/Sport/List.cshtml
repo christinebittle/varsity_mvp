@@ -1,0 +1,40 @@
+﻿@model varsity_w_auth.Models.ViewModels.ListSports
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+@if (Model.isadmin) {
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>
+            Name
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.sports) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.SportName)
+        </td>
+        <td>
+            @Html.ActionLink("Details", "Details", new { id = item.SportID })
+            @if(Model.isadmin){
+                <span style="margin-left:5px">
+                    @Html.ActionLink("Edit", "Edit", new { id = item.SportID }) |
+                    @Html.ActionLink("Delete", "DeleteConfirm", new { id = item.SportID })
+                </span>
+            }
+        </td>
+    </tr>
+}
+
+</table>

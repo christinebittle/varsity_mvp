@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,6 +16,7 @@ namespace varsity_w_auth.Models
 
         public string TeamName { get; set; }
 
+        [AllowHtml]
         public string TeamBio { get; set; }
 
         //A team can have many players
@@ -25,7 +27,7 @@ namespace varsity_w_auth.Models
 
         //A team is associated with one sport
         [ForeignKey("Sport")]
-        public int? SportID { get; set; }
+        public int SportID { get; set; }
         public virtual Sport Sport { get; set; }
     }
 
@@ -37,5 +39,10 @@ namespace varsity_w_auth.Models
         public string TeamName { get; set; }
         [DisplayName("Team Bio")]
         public string TeamBio { get; set; }
+
+        public int SportID { get; set; }
+
+        //we can shift the number of players associated with the team in the TeamDto
+        public int NumPlayers { get; set; }
     }
 }

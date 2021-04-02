@@ -29,11 +29,20 @@
             </dd>
 
             <dt>
+                Sport
+            </dt>
+
+            <dd>
+                <a href="/Sport/Details/@Model.sport.SportID">@Model.sport.SportName</a>
+            </dd>
+
+            <dt>
                 @Html.DisplayNameFor(model => model.team.TeamBio)
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.team.TeamBio)
+                @{/*Replaced with Raw HTML value*/}
+                @Html.Raw(Model.team.TeamBio)
             </dd>
 
         </dl>
@@ -86,7 +95,7 @@
             <nav class="linknav" style="margin-bottom:10px;">
                 written by @support.UserName on @support.DSupportDate
                 
-                @if(Model.isadmin || Model.userid == support.Id) { 
+                @if(Model.isadmin || (Model.userid == support.Id && Model.isfan)) { 
                     //Conditional logic to render the delete link.
                     //Admin can delete, or the owner of the resource.
                     <span class="editlink">
@@ -103,10 +112,10 @@
         </div>
     }
     <div>
-        @if (Model.isfan) { 
+        @if (Model.isfan || Model.isadmin) { 
         <form method="POST" action="/Team/AddSupport/@Model.team.TeamID">
             <div>
-                <textarea name="message"></textarea>
+                <textarea style="border:1px solid #0094ff; border-radius:3px; padding:5px;" name="message"></textarea>
             </div>
             <div>
                 <input type="submit" value="Add Support!" />

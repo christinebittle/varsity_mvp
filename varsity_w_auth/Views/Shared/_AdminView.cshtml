@@ -8,6 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
 
     <link rel="stylesheet" type="text/css" href="~/Content/lightbox.css" />
+    <script src="https://cdn.tiny.cloud/1/kkfp94wk8lnc4hvz94kuh5ihdmkpnwyowt06nfdlocjw8zbv/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
 
@@ -35,7 +36,7 @@
     </div>
     <div class="container body-content">
         @RenderBody()
-        
+
         <footer>
             <p>Varsity Project is a Sample Application for HTTP5204 Mobile Development.</p>
         </footer>
@@ -45,5 +46,12 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     <script src="~/Scripts/lightbox.js"></script>
+    <script>
+    //rich text WYSIWYG editor
+    //documentation: https://www.tiny.cloud/docs/quick-start/
+    tinymce.init({
+        selector: 'textarea.admin'
+    });
+    </script>
 </body>
 </html>

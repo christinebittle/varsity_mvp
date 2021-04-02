@@ -29,7 +29,7 @@ namespace varsity_w_auth.Models.ViewModels
         public IEnumerable<SupportDto> supportmessages { get; set; }
 
         //Information about the sport associated with the team
-        public Sport sport { get; set; }
+        public SportDto sport { get; set; }
 
     }
 }
