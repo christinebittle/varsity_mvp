@@ -48,7 +48,7 @@ namespace varsity_w_auth.Controllers
                     SupportMessage = Message.SupportMessage,
                     SupportDate = Message.SupportDate,
                     DSupportDate = Message.SupportDate.ToString("MMM d yyyy"),
-                    UserName = Message.ApplicationUser.UserName,
+                    UserName = Message.ApplicationUser.NickName,
                     Id = Message.Id
                 };
                 SupportMessageDtos.Add(MessageDto);
@@ -78,7 +78,9 @@ namespace varsity_w_auth.Controllers
                     SupportMessage = Message.SupportMessage,
                     SupportDate = Message.SupportDate,
                     DSupportDate = Message.SupportDate.ToString("MMM d yyyy"),
-                    UserName = Message.ApplicationUser.UserName,
+                    UserName = Message.ApplicationUser.NickName,
+                    TeamID = Message.TeamID,
+                    TeamName=Message.Team.TeamName,
                     Id = Message.Id
                 };
                 SupportMessageDtos.Add(MessageDto);

@@ -45,5 +45,8 @@ namespace varsity_w_auth.Models
         public string DSupportDate { get; set; }
         public string UserName { get; set; }
         public string Id { get; set; }
+
+        public int TeamID { get; set; }
+        public string TeamName { get; set; }
     }
 }

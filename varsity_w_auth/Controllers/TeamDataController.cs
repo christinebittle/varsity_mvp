@@ -47,6 +47,7 @@ namespace varsity_w_auth.Controllers
                     TeamID = Team.TeamID,
                     TeamName = Team.TeamName,
                     TeamBio = Team.TeamBio,
+                    SportName = Team.Sport.SportName,
                     NumPlayers = Team.Players.Count()
                 };
                 TeamDtos.Add(NewTeam);

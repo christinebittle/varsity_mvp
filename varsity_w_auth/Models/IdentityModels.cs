@@ -13,7 +13,7 @@ namespace varsity_w_auth.Models
     {
         //The messages of support sent by this logged in user.
         public ICollection<Support> SupportMessages { get; set; }
-
+        public string NickName { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -22,6 +22,12 @@ namespace varsity_w_auth.Models
             // Add custom user claims here
             return userIdentity;
         }
+    }
+    //useful for transmitting data about the user via API
+    public class ApplicationUserDto
+    {
+        public string id { get; set; }
+        public string NickName { get; set; }
     }
 
     public class VarsityDataContext : IdentityDbContext<ApplicationUser>

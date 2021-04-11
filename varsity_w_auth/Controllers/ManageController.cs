@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -7,6 +8,10 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using varsity_w_auth.Models;
+using System.Web.Script.Serialization;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Diagnostics;
 
 namespace varsity_w_auth.Controllers
 {
@@ -16,8 +21,54 @@ namespace varsity_w_auth.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
+
+        private JavaScriptSerializer jss = new JavaScriptSerializer();
+        private static readonly HttpClient client;
+        static ManageController()
+        {
+            HttpClientHandler handler = new HttpClientHandler()
+            {
+                AllowAutoRedirect = false,
+                //cookies are manually set in RequestHeader
+                UseCookies = false
+            };
+
+            client = new HttpClient(handler);
+            //change this to match your own local port number
+            client.BaseAddress = new Uri("https://localhost:44334/api/");
+            client.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/json"));
+        }
+
+        /// <summary>
+        /// Grabs the authentication credentials which are sent to the Controller.
+        /// This is NOT considered a proper authentication technique for the WebAPI. It piggybacks the existing authentication set up in the template for Individual User Accounts. Considering the existing scope and complexity of the course, it works for now.
+        /// 
+        /// Here is a descriptive article which walks through the process of setting up authorization/authentication directly.
+        /// https://docs.microsoft.com/en-us/aspnet/web-api/overview/security/individual-accounts-in-web-api
+        /// </summary>
+        private void GetApplicationCookie()
+        {
+            string token = "";
+            //HTTP client is set up to be reused, otherwise it will exhaust server resources.
+            //This is a bit dangerous because a previously authenticated cookie could be cached for
+            //a follow-up request from someone else. Reset cookies in HTTP client before grabbing a new one.
+            client.DefaultRequestHeaders.Remove("Cookie");
+            if (!User.Identity.IsAuthenticated) return;
+            HttpCookie cookie = System.Web.HttpContext.Current.Request.Cookies.Get(".AspNet.ApplicationCookie");
+            if (cookie != null) token = cookie.Value;
+
+            //collect token as it is submitted to the controller
+            //use it to pass along to the WebAPI.
+            Debug.WriteLine("Token Submitted is : " + token);
+            if (token != "") client.DefaultRequestHeaders.Add("Cookie", ".AspNet.ApplicationCookie=" + token);
+
+            return;
+        }
+
         public ManageController()
         {
+
         }
 
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -50,7 +101,9 @@ namespace varsity_w_auth.Controllers
             }
         }
 
-        //
+        // This is the 'profile page' for a user.
+        //we can manupulate the /Models/ViewModels/AccountViewModels.cs as we see fit to add in extra data 
+        //to the class "IndexViewModel"
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
@@ -64,16 +117,57 @@ namespace varsity_w_auth.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
+            //now that we have this user id we can use it to pull related data about this user,
+            //example -- pulling comments made by this user.
+
+
+            //Grab the messages of support for this team
+            string url = "supportdata/getsupportsforuser/" + userId;
+            HttpResponseMessage response = client.GetAsync(url).Result;
+            IEnumerable<SupportDto> SupportMessages = response.Content.ReadAsAsync<IEnumerable<SupportDto>>().Result;
+
+            url = "userdata/finduser/" + userId;
+            response = client.GetAsync(url).Result;
+            ApplicationUserDto SelectedUser = response.Content.ReadAsAsync<ApplicationUserDto>().Result;
+
             var model = new IndexViewModel
             {
+                //The UserManager code allows to access extra information from the currently logged in user.
+                //We could also achieve this by accessing the database for that user directly.
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
-                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
+                BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId),
+                
+                //these are fields that we can sneak in through the ViewModel, useful to understand how they work!
+                SupportMessages = SupportMessages,
+                UserName = SelectedUser.NickName,
+                UserId = SelectedUser.id
+
             };
             return View(model);
         }
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult UpdateUser(string id, ApplicationUserDto UserInfo)
+        {
+            GetApplicationCookie();
+
+            //In this example we can POST the user ID through ApplicationUserDto, rather than through URL.
+            string url = "UserData/UpdateUser";
+            
+            HttpContent content = new StringContent(jss.Serialize(UserInfo));
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            HttpResponseMessage response = client.PostAsync(url, content).Result;
+
+            //should be factored to redirect based on success/failure
+
+            return RedirectToAction("index");
+        }
+
+        //Below this point is the auto-scaffolded code for Individual User Accounts
 
         //
         // POST: /Manage/RemoveLogin

@@ -40,7 +40,9 @@ namespace varsity_w_auth.Models
         [DisplayName("Team Bio")]
         public string TeamBio { get; set; }
 
+        public string SportName { get; set; }
         public int SportID { get; set; }
+
 
         //we can shift the number of players associated with the team in the TeamDto
         public int NumPlayers { get; set; }

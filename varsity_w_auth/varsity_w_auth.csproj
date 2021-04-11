@@ -192,6 +192,7 @@
     <Compile Include="Controllers\SupportDataController.cs" />
     <Compile Include="Controllers\TeamController.cs" />
     <Compile Include="Controllers\TeamDataController.cs" />
+    <Compile Include="Controllers\UserDataController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -234,6 +235,10 @@
     <Compile Include="Migrations\202104020431173_sport-fix.cs" />
     <Compile Include="Migrations\202104020431173_sport-fix.Designer.cs">
       <DependentUpon>202104020431173_sport-fix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202104110112094_nickname.cs" />
+    <Compile Include="Migrations\202104110112094_nickname.Designer.cs">
+      <DependentUpon>202104110112094_nickname.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Sport.cs" />
@@ -404,6 +409,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202104020431173_sport-fix.resx">
       <DependentUpon>202104020431173_sport-fix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202104110112094_nickname.resx">
+      <DependentUpon>202104110112094_nickname.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

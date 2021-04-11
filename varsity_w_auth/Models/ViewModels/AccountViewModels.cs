@@ -79,6 +79,8 @@ namespace varsity_w_auth.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public string NickName { get; set; }
     }
 
     public class ResetPasswordViewModel
