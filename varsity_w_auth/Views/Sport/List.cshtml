@@ -1,11 +1,11 @@
 ﻿@model varsity_w_auth.Models.ViewModels.ListSports
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Sports";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Sports</h2>
 
 @if (Model.isadmin) {
     <p>
@@ -15,25 +15,31 @@
 <table class="table">
     <tr>
         <th>
-            Name
+            Sport
         </th>
-        <th></th>
-    </tr>
+
+        @if (Model.isadmin)
+        {
+            <th> 
+                Action
+            </th>
+         }
+            
+        </tr>
 
 @foreach (var item in Model.sports) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.SportName)
+            @Html.ActionLink(item.SportName, "Details", new { id = item.SportID })
         </td>
-        <td>
-            @Html.ActionLink("Details", "Details", new { id = item.SportID })
-            @if(Model.isadmin){
-                <span style="margin-left:5px">
-                    @Html.ActionLink("Edit", "Edit", new { id = item.SportID }) |
-                    @Html.ActionLink("Delete", "DeleteConfirm", new { id = item.SportID })
-                </span>
-            }
-        </td>
+        
+        @if(Model.isadmin){
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.SportID }) &nbsp; &nbsp;
+                @Html.ActionLink("Delete", "DeleteConfirm", new { id = item.SportID })
+            </td>
+        }
+        
     </tr>
 }
 

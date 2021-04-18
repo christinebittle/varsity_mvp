@@ -13,6 +13,7 @@ namespace varsity_w_auth.Models
 
         [Key]
         public int SportID { get; set; }
+        [Required]
         public string SportName { get; set; }
 
         //A sport can have many teams
@@ -23,6 +24,7 @@ namespace varsity_w_auth.Models
     public class SportDto
     {
         public int SportID { get; set; }
+        [Required(ErrorMessage ="Please enter a Name.")]
         public string SportName { get; set; }
 
     }

@@ -1,11 +1,10 @@
 ﻿@model varsity_w_auth.Models.PlayerDto
 
 @{
-    ViewBag.Title = "View";
+    ViewBag.Title = "Delete Player";
     Layout = "~/Views/Shared/_AdminView.cshtml";
 }
 
-<h2>View</h2>
 
 <h3>Are you sure you want to delete this player?</h3>
 <div>
@@ -28,11 +27,11 @@
         </dd>
 
         <dt>
-            @Html.Raw(Model.PlayerBio)
+            @Html.DisplayNameFor(model=>model.PlayerBio)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.PlayerBio)
+            @Html.Raw(Model.PlayerBio)
         </dd>
 
     </dl>
@@ -41,7 +40,7 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <input type="submit" value="Delete" class="btn btn-danger" /> &nbsp;&nbsp;
             @Html.ActionLink("Back to List", "List")
         </div>
     }

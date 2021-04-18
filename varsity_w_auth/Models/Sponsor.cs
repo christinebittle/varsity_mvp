@@ -11,8 +11,9 @@ namespace varsity_w_auth.Models
     {
         [Key]
         public int SponsorID { get; set; }
-
+        [Required]
         public string SponsorName { get; set; }
+        [Required]
         public string SponsorURL { get; set; }
 
         //Gold, Silver, Platinum etc.
@@ -29,7 +30,9 @@ namespace varsity_w_auth.Models
     {
         public int SponsorID { get; set; }
 
+        [Required(ErrorMessage="Please Enter a Name")]
         public string SponsorName { get; set; }
+        [Required(ErrorMessage ="Please Enter a URL.")]
         public string SponsorURL { get; set; }
     }
 }

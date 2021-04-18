@@ -71,6 +71,10 @@ footer{padding-top:50px;}
     font-weight: 400;
 }
 
+.editnav{
+    margin-bottom:30px;
+}
+
 .editnav ul{
     list-style-type:none;
     padding-left:0;
@@ -100,6 +104,7 @@ footer{padding-top:50px;}
 
 textarea{max-width:300px; width:100%;}
 
+.asidemsg{font-style:italic; color:#c4c4c4;}
 
 @media screen and (max-width:700px) {
     /*change to two column*/

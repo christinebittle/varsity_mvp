@@ -18,7 +18,7 @@
         </ul>
 
     </nav>
-    <div></div>
+    
     <div style="overflow:hidden;">
         <div style="float:left; margin-right:2%; width:49%;">
             <dl class="dl-horizontal">
@@ -40,9 +40,13 @@
 
             </dl>
         </div>
-        <div style="float:left; margin-right:0%; width:49%; padding-top:20px;">
+        <div style="float:left; margin-right:0%; width:49%; padding-top:10px;">
             <h5>Teams Sponsored:</h5>
             <div class="sublist">
+                @if (Model.sponsoredteams.Count() == 0)
+                {
+                    <span class="asidemsg">Not sponsoring any teams.</span>
+                }
                 @foreach (var team in Model.sponsoredteams)
                 {
                     <div class="listitem">

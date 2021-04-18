@@ -36,11 +36,15 @@ namespace varsity_w_auth.Models
         public int TeamID { get; set; }
 
         [DisplayName("Team Name")]
+        [Required(ErrorMessage ="Please Enter a Team Name.")]
         public string TeamName { get; set; }
         [DisplayName("Team Bio")]
+        [Required(ErrorMessage ="Please Enter a Team Bio.")]
         public string TeamBio { get; set; }
 
         public string SportName { get; set; }
+
+        [DisplayName("Sport")]
         public int SportID { get; set; }
 
 

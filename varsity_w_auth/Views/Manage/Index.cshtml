@@ -29,7 +29,10 @@
             <input name="id" value="@Model.UserId" style="display:none;" />
             <div class="form-group">
                 <label class="control-label">Nickname:</label>
-                <input class="form-control" type="text" name="NickName" value="@Model.UserName" />
+                @{/*Done without HTML razor helpers as an example*/}
+                <input class="form-control" type="text" name="NickName" value="@Model.UserName" data-val="true" data-val-required="You must have a nickname!" />
+                <span class="field-validation-valid text-danger" data-valmsg-for="NickName" data-valmsg-replace="true"></span>
+
             </div>
             <div class="form-group">
                 <input type="submit" value="Update"/>
@@ -39,8 +42,12 @@
     <div style="margin-top:30px;">
         <h4>Comments Written By You:</h4>
         @{
-            //Rendering includes context of team this message is written for.
-            //Links to the team details where the comment is written, will jump down to the ID
+        //Rendering includes context of team this message is written for.
+        //Links to the team details where the comment is written, will jump down to the ID
+        }
+        @if (Model.SupportMessages.Count()==0)
+        {
+            <span>You haven't written any messages yet. Choose your @Html.ActionLink("favorite team", "List","Team") to write one!</span>
         }
         @foreach (var support in Model.SupportMessages)
         {

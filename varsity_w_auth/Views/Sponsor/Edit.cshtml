@@ -22,14 +22,15 @@
                         @Html.LabelFor(model => model.sponsor.SponsorName, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
                             @Html.EditorFor(model => model.sponsor.SponsorName, new { htmlAttributes = new { @class = "form-control", Name = "SponsorName" } })
-                            @Html.ValidationMessageFor(model => model.sponsor.SponsorName, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => model.sponsor.SponsorName, "", new { @class = "text-danger", @data_valmsg_for="SponsorName" })
                         </div>
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.sponsor.SponsorURL, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
                             @Html.EditorFor(model => model.sponsor.SponsorURL, new { htmlAttributes = new { @class = "form-control", Name = "SponsorURL" } })
-                            @Html.ValidationMessageFor(model => model.sponsor.SponsorURL, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => model.sponsor.SponsorURL, "", new { @class = "text-danger",
+                           @data_valmsg_for = "SponsorURL" })
                         </div>
                     </div>
 
@@ -44,6 +45,11 @@
             <div style="width:39%; margin: 0 auto; float:left;">
                 <h4>Teams Sponsored:</h4>
                 <div>
+                    @if (Model.sponsoredteams.Count() == 0)
+                    {
+                        <span class="asidemsg">No teams sponsored.</span>
+
+                    }
                     @foreach (var team in Model.sponsoredteams)
                     { //Use HTML inspector to check the generated HTML from the razor syntax!
                         <div>
@@ -66,17 +72,22 @@
                 <div>
                     <h3>Sponsor Team:</h3>
                     <div>
-                        <form method="POST" action="/Sponsor/Sponsor">
-                            <select name="TeamID">
-                                @foreach (var team in Model.allteams)
-                                {
-                                    <option value="@team.TeamID">@team.TeamName</option>
-                                }
-                            </select>
-                            <input type="number" name="SponsorID" value="@Model.sponsor.SponsorID" style="display:none;" />
-                            <input type="submit" value="Sponsor Team" />
-                        </form>
-                    
+                        @if (Model.allteams.Count() == 0)
+                        {
+                            <span class="asidemsg">There are no more teams to sponsor. You can @Html.ActionLink("add a new team", "Create","Team")</span>
+                        }
+                        else { 
+                            <form method="POST" action="/Sponsor/Sponsor">
+                                <select name="TeamID">
+                                    @foreach (var team in Model.allteams)
+                                    {
+                                        <option value="@team.TeamID">@team.TeamName</option>
+                                    }
+                                </select>
+                                <input type="number" name="SponsorID" value="@Model.sponsor.SponsorID" style="display:none;" />
+                                <input type="submit" value="Sponsor Team" />
+                            </form>
+                        }
                   
                     </div>
                 </div>

@@ -1,39 +1,37 @@
 ﻿@model varsity_w_auth.Models.ViewModels.UpdateSport
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = Model.sport.SportName;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Details</h2>
-
 <div>
-    <h4>Sport</h4>
+    <h3>@Model.sport.SportName</h3>
+    <nav class="editnav">
+        <ul>
+            @if (Model.isadmin)
+                {
+                    <li>@Html.ActionLink("Edit", "Edit", new { id = Model.sport.SportID })</li>
+                }
+            <li>@Html.ActionLink("Back to List", "List")</li>
+        </ul>
+    </nav>
     <hr />
-    <p>
-        @if (Model.isadmin) { 
-        <span style="margin-right:5px">@Html.ActionLink("Edit", "Edit", new { id = Model.sport.SportID })</span>
-        }
-        @Html.ActionLink("Back to List", "List")
-    </p>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.sport.SportName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.sport.SportName)
-        </dd>
-
-    </dl>
-    <h5>Teams Playing This Sport:</h5>
-    <div>
-        <div>
-            @foreach (var team in Model.teams)
-            {
-                <a href="/Team/Details/@team.TeamID">@team.TeamName</a>
-            }
+    @{ /*
+More Details about sports can go here.
+*/}
+    <h4>Teams Playing This Sport:</h4>
+    <div class="sublist">
+    @if (Model.teams.Count()==0)
+    {
+        <span class="asidemsg">No teams playing this sport.</span>
+    }
+    @foreach (var team in Model.teams)
+    {
+        <div class="listitem">
+            <a href="/Team/Details/@team.TeamID">@team.TeamName</a>
         </div>
+    }
+
     </div>
 </div>
 

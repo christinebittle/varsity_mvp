@@ -17,6 +17,7 @@ namespace varsity_w_auth.Models
         public int SupportID { get; set; }
 
         //the content of the supporting message
+        [Required]
         public string SupportMessage { get; set; }
 
         //the date of the supporting message
@@ -39,6 +40,8 @@ namespace varsity_w_auth.Models
         //when looking at a message of support, we would want to see
         //supportid, message, date, username
         public int SupportID { get; set; }
+
+        [Required(ErrorMessage ="You must write a comment.")]
         public string SupportMessage { get; set; }
         public DateTime SupportDate { get; set; }
 

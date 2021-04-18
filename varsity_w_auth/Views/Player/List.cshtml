@@ -14,7 +14,7 @@
     }
 </p>
 <div class="paginate">
-    @{
+    @if(Model.players.Count()>0){
         int PrevPage = Convert.ToInt32(ViewData["PageNum"]) - 1;
         int NextPage = Convert.ToInt32(ViewData["PageNum"]) + 1;
         @Html.ActionLink("Prev", "List", new { PageNum = PrevPage })

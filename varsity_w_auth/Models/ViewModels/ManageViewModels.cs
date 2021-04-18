@@ -15,6 +15,8 @@ namespace varsity_w_auth.Models
 
         //extra fields we add in to the IndexViewModel here!
         public IEnumerable<SupportDto> SupportMessages { get; set; }
+
+        [Required(ErrorMessage ="You must have a nickname!")]
         public string UserName { get; set; }
         public string UserId { get; set; }
         public bool IsFan { get; set; }

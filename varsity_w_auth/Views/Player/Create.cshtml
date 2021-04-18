@@ -1,11 +1,10 @@
 ﻿@model varsity_w_auth.Models.ViewModels.UpdatePlayer
 
 @{
-    ViewBag.Title = "View";
+    ViewBag.Title = "Create Player";
     Layout = "~/Views/Shared/_AdminView.cshtml";
 }
 
-<h2>View</h2>
 
 @using (Html.BeginForm())
 {
@@ -15,15 +14,18 @@
     @Html.AntiForgeryToken()
     
 <div class="form-horizontal">
-    <h4>Player</h4>
+    <h4>Create a New Player</h4>
+    <div>
+        @Html.ActionLink("Back to List", "List")
+    </div>
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    
+
     <div class="form-group">
         @Html.LabelFor(model => model.player.PlayerFirstName, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.EditorFor(model => model.player.PlayerFirstName, new { htmlAttributes = new { @class = "form-control", Name = "PlayerFirstName" } })
-            @Html.ValidationMessageFor(model => model.player.PlayerFirstName, "", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(model => model.player.PlayerFirstName, "", new { @class = "text-danger", data_valmsg_for = "PlayerFirstName" })
         </div>
     </div>
 
@@ -31,14 +33,14 @@
         @Html.LabelFor(model => model.player.PlayerLastName, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.EditorFor(model => model.player.PlayerLastName, new { htmlAttributes = new { @class = "form-control", Name = "PlayerLastName" } })
-            @Html.ValidationMessageFor(model => model.player.PlayerLastName, "", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(model => model.player.PlayerLastName, "", new { @class = "text-danger", data_valmsg_for = "PlayerLastName" })
         </div>
     </div>
 
     <div class="form-group">
         @Html.LabelFor(model => model.player.PlayerBio, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.player.PlayerBio, new { htmlAttributes = new { @class = "form-control", Name = "PlayerBio" } })
+            @Html.TextAreaFor(model => model.player.PlayerBio, new { @class = "form-control admin", Name = "PlayerBio" })
             @Html.ValidationMessageFor(model => model.player.PlayerBio, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -46,23 +48,35 @@
     <div class="form-group">
         @Html.LabelFor(model => model.player.TeamID, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
+            @if (Model.allteams.Count() == 0)
+            {
+                <span>There are no teams yet. Please @Html.ActionLink("add a team", "Create", "Team") first.</span>
+            }
+            else
+            {
             <select name="TeamID">
                 @foreach (var team in Model.allteams)
                 {
                     <option value="@team.TeamID">@team.TeamName</option>
                 }
             </select>
+            }
+
+            
         </div>
     </div>
-        
+
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create" class="btn btn-default" />
+            @{ string noclick = ""; }
+            @if (Model.allteams.Count() == 0)
+            {
+                noclick = "disabled";
+            }
+            <input type="submit" value="Create" class="btn btn-default @noclick" />
         </div>
     </div>
 </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "List")
-</div>
+

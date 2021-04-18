@@ -21,7 +21,7 @@
         @Html.LabelFor(model => model.team.TeamName, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.EditorFor(model => model.team.TeamName, new { htmlAttributes = new { @class = "form-control", Name = "TeamName" } })
-            @Html.ValidationMessageFor(model => model.team.TeamName, "", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(model => model.team.TeamName, "", new { @class = "text-danger", @data_valmsg_for="TeamName" })
         </div>
     </div>
 
@@ -29,26 +29,38 @@
         @Html.LabelFor(model => model.team.TeamBio, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.EditorFor(model => model.team.TeamBio, new { htmlAttributes = new { @class = "form-control", Name = "TeamBio" } })
-            @Html.ValidationMessageFor(model => model.team.TeamBio, "", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(model => model.team.TeamBio, "", new { @class = "text-danger", @data_valmsg_for = "TeamBio" })
         </div>
     </div>
 
     <div class="form-group">
         @Html.LabelFor(model => model.team.SportID, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            <select name="SportID">
-                @foreach (var sport in Model.sports)
-                {
-                    <option value="@sport.SportID">@sport.SportName</option>
-                }
-            </select>
+            @if (Model.sports.Count()==0)
+            {
+                <span>There are no sports in the system. Please @Html.ActionLink("add a sport","Create","Sport") first.</span>
+            }
+            else
+            {
+                <select name="SportID">
+                    @foreach (var sport in Model.sports)
+                    {
+                        <option value="@sport.SportID">@sport.SportName</option>
+                    }
+                </select>
+            }
         </div>
     </div>
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Create" class="btn btn-default" />
-        </div>
+                @{ string noclick = ""; }
+                @if (Model.sports.Count() == 0)
+                {
+                    noclick = "disabled";
+                }
+                <input type="submit" value="Create" class="btn btn-default @noclick" />
+            </div>
     </div>
 </div>
 }

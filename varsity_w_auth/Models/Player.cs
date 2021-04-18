@@ -16,8 +16,9 @@ namespace varsity_w_auth.Models
         [Key]
         public int PlayerID { get; set; }
 
+        [Required]
         public string PlayerFirstName { get; set; }
-
+        [Required]
         public string PlayerLastName { get; set; }
 
         [AllowHtml]
@@ -46,15 +47,20 @@ namespace varsity_w_auth.Models
     {
         public int PlayerID { get; set; }
         [DisplayName("First Name")]
+        [Required(ErrorMessage="Please Enter a First Name.")]
         public string PlayerFirstName { get; set; }
+
         [DisplayName("Last Name")]
+        [Required(ErrorMessage = "Please Enter a Last Name.")]
         public string PlayerLastName { get; set; }
+
         [DisplayName("Player Bio")]
         public string PlayerBio { get; set; }
 
         public bool PlayerHasPic { get; set; }
         public string PicExtension { get; set; }
 
+        [DisplayName("Team")]
         public int TeamID { get; set; }
     }
 }
