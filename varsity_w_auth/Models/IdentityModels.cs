@@ -32,10 +32,22 @@ namespace varsity_w_auth.Models
 
     public class VarsityDataContext : IdentityDbContext<ApplicationUser>
     {
+        /* Local Connection String*/
+        /*
         public VarsityDataContext()
             : base("name=VarsityDataContextwAuth", throwIfV1Schema: false)
         {
+        }*/
+        
+
+        /* AWS Connection*/
+        
+        public VarsityDataContext()
+            : base(AWSConnector.GetRDSConnectionString())
+        {
         }
+        
+
 
         public static VarsityDataContext Create()
         {

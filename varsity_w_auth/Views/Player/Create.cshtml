@@ -5,7 +5,6 @@
     Layout = "~/Views/Shared/_AdminView.cshtml";
 }
 
-
 @using (Html.BeginForm())
 {
     //This will set a hidden input field with value "_RequestVerificationToken"
@@ -73,7 +72,7 @@
             {
                 noclick = "disabled";
             }
-            <input type="submit" value="Create" class="btn btn-default @noclick" />
+            <input type="submit" value="Create" class="btn btn-default @noclick" @noclick/>
         </div>
     </div>
 </div>

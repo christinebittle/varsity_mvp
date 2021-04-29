@@ -38,7 +38,7 @@ namespace varsity_w_auth.Controllers
         {
             
 
-            IEnumerable<Support> SupportMessages = db.Supports.Where(s=>s.TeamID == id);
+            IEnumerable<Support> SupportMessages = db.Supports.Where(s=>s.TeamID == id).ToList();
             List<SupportDto> SupportMessageDtos = new List<SupportDto>() { };
 
             foreach(var Message in SupportMessages)
@@ -67,7 +67,7 @@ namespace varsity_w_auth.Controllers
         /// </example>
         public IHttpActionResult GetSupportsForUser(string id)
         {
-            IEnumerable<Support> SupportMessages = db.Supports.Where(s => s.Id == id);
+            IEnumerable<Support> SupportMessages = db.Supports.Where(s => s.Id == id).ToList();
             List<SupportDto> SupportMessageDtos = new List<SupportDto>() { };
 
             foreach (var Message in SupportMessages)

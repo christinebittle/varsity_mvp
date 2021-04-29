@@ -34,7 +34,9 @@ namespace varsity_w_auth.Controllers
             };
             client = new HttpClient(handler);
             //change this to match your own local port number
-            client.BaseAddress = new Uri("https://localhost:44334/api/");
+
+            //client.BaseAddress = new Uri("https://localhost:44334/api/");
+            client.BaseAddress = new Uri("http://varsityproject-env.eba-f83mxjuc.us-east-2.elasticbeanstalk.com/api/");
             client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/json"));
 
